@@ -1,0 +1,138 @@
+group 'com.rover12421'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'idea'
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+configurations {
+    provided
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+sourceCompatibility = jdkVer
+targetCompatibility = jdkVer
+
+sourceSets {
+    main { compileClasspath += configurations.provided }
+}
+
+idea {
+    project {
+        languageLevel = jdkVer
+    }
+}
+
+def loadProperties(String sourceFileName) {
+    def config = new Properties()
+    def propFile = new File(sourceFileName)
+    System.err.println("Loading property file: " + propFile.absolutePath)
+    if (propFile.canRead()) {
+        config.load(new FileInputStream(propFile))
+        for (Map.Entry property in config) {
+            System.out.println("setting " + property.key)
+            project.ext[property.key] = property.value;
+        }
+    }
+}
+
+loadProperties("local.properties")
+
+// used for official releases only. Please don't use
+task release {
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    required { gradle.taskGraph.hasTask('uploadArchives') }
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        configuration = configurations.archives
+
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        if (rootProject.hasProperty('sonatypeUsername') && rootProject.hasProperty('sonatypePassword')) {
+            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+        }
+
+        pom.artifactId = project.name
+
+        pom.project {
+            name project.name
+            url 'http://www.rover12421.com'
+            packaging 'jar'
+            licenses {
+                license {
+                    name 'MIT License'
+                    url 'https://opensource.org/licenses/mit-license.php'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection 'scm:git:git://github.com/rover12421/AndroidHideApi.git'
+                developerConnection 'scm:git:git@github.com:rover12421/AndroidHideApi.git'
+            }
+            developers {
+                developer {
+                    id 'rover12421'
+                    name 'Rover12421'
+                    email 'rover12421@163.com'
+                }
+            }
+        }
+    }
+}
+
+tasks.getByPath(':release').dependsOn(uploadArchives)
+
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.project {
+            description 'Android Hidden API'
+            scm {
+                url 'https://github.com/rover12421/AndroidHideApi/tree/master'
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14.1'
+}
+
+def ANDROID_HOME = System.getenv()['ANDROID_HOME']
+
+dependencies {
+    provided files("$ANDROID_HOME/platforms/android-25/android.jar")
+}

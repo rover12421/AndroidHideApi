@@ -1,0 +1,16 @@
+.idea/
+.idea_modules/
+.gradle/
+out/
+build/
+.gradletasknamecache
+*.iml
+*.ipr
+*.iws
+*.kate-swp
+*~
+*.project
+*.classpath
+*.settings
+*.setting
+local.properties
