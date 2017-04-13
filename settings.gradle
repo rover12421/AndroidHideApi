@@ -1,2 +1,5 @@
 rootProject.name = 'AndroidHideApi'
+include 'mediatek'
+include 'android'
+include 'huawei'
 
