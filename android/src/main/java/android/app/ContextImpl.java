@@ -481,9 +481,19 @@ class ContextImpl extends Context {
     }
 
     @Override
+    public Intent registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, int i) {
+        return null;
+    }
+
+    @Override
     public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter,
                                    String broadcastPermission, Handler scheduler) {
         throw new UnsupportedOperationException("STUB");
+    }
+
+    @Override
+    public Intent registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, String s, Handler handler, int i) {
+        return null;
     }
 
     public Intent registerReceiverAsUser(BroadcastReceiver receiver, UserHandle user,
@@ -499,6 +509,11 @@ class ContextImpl extends Context {
     @Override
     public ComponentName startService(Intent service) {
         throw new UnsupportedOperationException("STUB");
+    }
+
+    @Override
+    public ComponentName startForegroundService(Intent intent) {
+        return null;
     }
 
     @Override
@@ -603,6 +618,11 @@ class ContextImpl extends Context {
     }
 
     @Override
+    public void revokeUriPermission(String s, Uri uri, int i) {
+
+    }
+
+    @Override
     public int checkUriPermission(Uri uri, int pid, int uid, int modeFlags) {
         throw new UnsupportedOperationException("STUB");
     }
@@ -661,6 +681,11 @@ class ContextImpl extends Context {
     public Context createPackageContext(String packageName, int flags)
             throws NameNotFoundException {
         throw new UnsupportedOperationException("STUB");
+    }
+
+    @Override
+    public Context createContextForSplit(String s) throws NameNotFoundException {
+        return null;
     }
 
     public Context createPackageContextAsUser(String packageName, int flags, UserHandle user)
