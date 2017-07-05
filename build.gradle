@@ -38,7 +38,7 @@ allprojects {
     apply plugin: 'signing'
 
     group 'com.rover12421.AndroidHideApi'
-    version '1.5'
+    version '1.6'
 
     configurations {
         provided
