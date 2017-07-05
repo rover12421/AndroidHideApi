@@ -28,17 +28,18 @@ def loadProperties(String sourceFileName) {
 
 loadProperties("local.properties")
 
-// used for official releases only. Please don't use
-task release {
+allprojects {
+    // used for official releases only. Please don't use
+    task release {
+    }
 }
 
-allprojects {
+subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'signing'
 
     group 'com.rover12421.AndroidHideApi'
-    version '1.6'
 
     configurations {
         provided
@@ -128,7 +129,7 @@ allprojects {
         }
     }
 
-    tasks.getByPath(':release').dependsOn(uploadArchives)
+    tasks.getByPath(":${project.name}:release").dependsOn(uploadArchives)
 
     uploadArchives {
         repositories.mavenDeployer {
