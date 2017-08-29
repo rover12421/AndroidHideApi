@@ -14,4 +14,3 @@ build/
 *.settings
 *.setting
 local.properties
-gradle/
