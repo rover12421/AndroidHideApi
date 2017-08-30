@@ -29,8 +29,15 @@ def loadProperties(String sourceFileName) {
 loadProperties("local.properties")
 
 allprojects {
+    group 'com.rover12421.AndroidHideApi'
+
     // used for official releases only. Please don't use
     task release {
+    }
+
+    repositories {
+        jcenter()
+        mavenCentral()
     }
 }
 
@@ -39,15 +46,8 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'signing'
 
-    group 'com.rover12421.AndroidHideApi'
-
     configurations {
         provided
-    }
-
-    repositories {
-        jcenter()
-        mavenCentral()
     }
 
     sourceCompatibility = jdkVer
@@ -95,16 +95,15 @@ subprojects {
 
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            if (rootProject.hasProperty('sonatypeUsername') && rootProject.hasProperty('sonatypePassword')) {
-                repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
-                }
+            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
             }
 
             pom.artifactId = project.name
 
             pom.project {
                 name project.name
+                description "Android Hidden API / $project.name"
                 url 'http://www.rover12421.com'
                 packaging 'jar'
                 licenses {
@@ -115,6 +114,7 @@ subprojects {
                     }
                 }
                 scm {
+                    url 'https://github.com/rover12421/AndroidHideApi/tree/master'
                     connection 'scm:git:git://github.com/rover12421/AndroidHideApi.git'
                     developerConnection 'scm:git:git@github.com:rover12421/AndroidHideApi.git'
                 }
@@ -130,17 +130,6 @@ subprojects {
     }
 
     tasks.getByPath(":${project.name}:release").dependsOn(uploadArchives)
-
-    uploadArchives {
-        repositories.mavenDeployer {
-            pom.project {
-                description "Android Hidden API / $project.name"
-                scm {
-                    url 'https://github.com/rover12421/AndroidHideApi/tree/master'
-                }
-            }
-        }
-    }
 }
 
 task wrapper(type: Wrapper) {
