@@ -58,6 +58,7 @@ subprojects {
     }
 
     tasks.withType(Javadoc) {
+        classpath += configurations.provided
         options.addStringOption('Xdoclint:none', '-quiet')
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charSet', 'UTF-8')
