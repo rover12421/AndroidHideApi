@@ -4146,17 +4146,21 @@ public abstract class Context {
      *
      * @hide
      */
-    public abstract Context createPackageContextAsUser(
+    public Context createPackageContextAsUser(
             String packageName, int flags, UserHandle user)
-            throws PackageManager.NameNotFoundException;
+            throws PackageManager.NameNotFoundException {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Creates a context given an {@link android.content.pm.ApplicationInfo}.
      *
      * @hide
      */
-    public abstract Context createApplicationContext(ApplicationInfo application,
-            int flags) throws PackageManager.NameNotFoundException;
+    public Context createApplicationContext(ApplicationInfo application,
+            int flags) throws PackageManager.NameNotFoundException {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Get the userId associated with this context
@@ -4165,7 +4169,9 @@ public abstract class Context {
      * @hide
      */
     /*@TestApi*/
-    public abstract /*@UserIdInt*/ int getUserId();
+    public /*@UserIdInt*/ int getUserId() {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Return a new Context object for the current Context but whose resources
@@ -4267,7 +4273,9 @@ public abstract class Context {
      * @hide
      */
     /*@SystemApi*/
-    public abstract Context createCredentialProtectedStorageContext();
+    public Context createCredentialProtectedStorageContext() {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /** @removed */
     @Deprecated
@@ -4284,12 +4292,16 @@ public abstract class Context {
      * @return The compatibility info holder, or null if not required by the application.
      * @hide
      */
-    public abstract DisplayAdjustments getDisplayAdjustments(int displayId);
+    public DisplayAdjustments getDisplayAdjustments(int displayId) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * @hide
      */
-    public abstract Display getDisplay();
+    public Display getDisplay() {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Indicates whether this Context is restricted.
@@ -4308,7 +4320,9 @@ public abstract class Context {
      *
      * @see #createDeviceProtectedStorageContext()
      */
-    public abstract boolean isDeviceProtectedStorage();
+    public boolean isDeviceProtectedStorage(){
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /** @removed */
     @Deprecated
@@ -4324,7 +4338,9 @@ public abstract class Context {
      * @hide
      */
     /*@SystemApi*/
-    public abstract boolean isCredentialProtectedStorage();
+    public boolean isCredentialProtectedStorage() {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /** @removed */
     @Deprecated
