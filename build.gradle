@@ -2,8 +2,15 @@ apply plugin: 'idea'
 
 buildscript {
     repositories {
-        jcenter()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
+        maven { url 'https://jitpack.io' }
+        google()
         mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -36,8 +43,12 @@ allprojects {
     }
 
     repositories {
-        jcenter()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
+        maven { url 'https://jitpack.io' }
+        google()
         mavenCentral()
+        jcenter()
     }
 }
 
@@ -79,7 +90,9 @@ subprojects {
     dependencies {
         provided files("$ANDROID_HOME/platforms/android-26/android.jar")
     }
+}
 
+configure(subprojects - project(':test')) {
     artifacts {
         archives javadocJar
         archives sourcesJar

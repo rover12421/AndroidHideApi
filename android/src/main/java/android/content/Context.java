@@ -681,7 +681,9 @@ public abstract class Context {
      * @see #MODE_PRIVATE
      * @removed
      */
-    public abstract SharedPreferences getSharedPreferences(File file, int mode);
+    public SharedPreferences getSharedPreferences(File file, int mode) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Move an existing shared preferences file from the given source storage
@@ -804,7 +806,9 @@ public abstract class Context {
      * @see #getSharedPreferences(String, int)
      * @removed
      */
-    public abstract File getSharedPreferencesPath(String name);
+    public File getSharedPreferencesPath(String name) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Returns the absolute path to the directory on the filesystem where all
@@ -3695,8 +3699,10 @@ public abstract class Context {
 
     /** @hide */
     @PackageManager.PermissionResult
-    public abstract int checkPermission(@NonNull String permission, int pid, int uid,
-            IBinder callerToken);
+    public int checkPermission(@NonNull String permission, int pid, int uid,
+            IBinder callerToken) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Determine whether the calling process of an IPC you are handling has been
@@ -3903,8 +3909,10 @@ public abstract class Context {
             /*@Intent.AccessUriMode*/ int modeFlags);
 
     /** @hide */
-    public abstract int checkUriPermission(Uri uri, int pid, int uid,
-            /*@Intent.AccessUriMode*/ int modeFlags, IBinder callerToken);
+    public int checkUriPermission(Uri uri, int pid, int uid,
+            /*@Intent.AccessUriMode*/ int modeFlags, IBinder callerToken) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Determine whether the calling process and user ID has been
