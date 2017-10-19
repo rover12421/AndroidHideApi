@@ -16,6 +16,7 @@
 
 package android.os.storage;
 
+import android.annotation.NonNull;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -54,7 +55,7 @@ public class DiskInfo implements Parcelable {
         throw new UnsupportedOperationException("STUB");
     }
 
-    public /*@NonNull*/ String getId() {
+    public @NonNull String getId() {
         return id;
     }
 

@@ -16,6 +16,8 @@
 
 package android.content.pm;
 
+import android.annotation.NonNull;
+import android.annotation.Nullable;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -52,32 +54,33 @@ public final class EphemeralApplicationInfo implements Parcelable {
         throw new UnsupportedOperationException("STUB");
     }
 
-    public /*@NonNull*/ String getPackageName() {
+    public @NonNull String getPackageName() {
         if (mApplicationInfo != null) {
             return mApplicationInfo.packageName;
         }
         return mPackageName;
     }
 
-    public /*@NonNull*/ CharSequence loadLabel(/*@NonNull*/ PackageManager packageManager) {
+    public @NonNull CharSequence loadLabel(@NonNull PackageManager packageManager) {
         if (mApplicationInfo != null) {
             return mApplicationInfo.loadLabel(packageManager);
         }
         return mLabelText;
     }
 
-    public /*@NonNull*/ Drawable loadIcon(/*@NonNull*/ PackageManager packageManager) {
+    public @NonNull Drawable loadIcon(@NonNull PackageManager packageManager) {
         if (mApplicationInfo != null) {
             return mApplicationInfo.loadIcon(packageManager);
         }
         return packageManager.getEphemeralApplicationIcon(mPackageName);
     }
 
-    public /*@Nullable*/ String[] getRequestedPermissions() {
+    public @Nullable
+    String[] getRequestedPermissions() {
         return mRequestedPermissions;
     }
 
-    public /*@Nullable*/ String[] getGrantedPermissions() {
+    public @Nullable String[] getGrantedPermissions() {
         return mGrantedPermissions;
     }
 

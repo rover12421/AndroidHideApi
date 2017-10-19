@@ -16,6 +16,8 @@
 
 package android.os.storage;
 
+import android.annotation.NonNull;
+import android.annotation.Nullable;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
@@ -106,7 +108,7 @@ public class VolumeInfo implements Parcelable {
         throw new UnsupportedOperationException("STUB");
     }
 
-    public static /*@NonNull*/ String getEnvironmentForState(int state) {
+    public static @NonNull String getEnvironmentForState(int state) {
         final String envState = sStateToEnvironment.get(state);
         if (envState != null) {
             return envState;
@@ -115,27 +117,28 @@ public class VolumeInfo implements Parcelable {
         }
     }
 
-    public static /*@Nullable*/ String getBroadcastForEnvironment(String envState) {
+    public static @Nullable
+    String getBroadcastForEnvironment(String envState) {
         return sEnvironmentToBroadcast.get(envState);
     }
 
-    public static /*@Nullable*/ String getBroadcastForState(int state) {
+    public static @Nullable String getBroadcastForState(int state) {
         return getBroadcastForEnvironment(getEnvironmentForState(state));
     }
 
-    public static /*@NonNull*/ Comparator<VolumeInfo> getDescriptionComparator() {
+    public static @NonNull Comparator<VolumeInfo> getDescriptionComparator() {
         throw new UnsupportedOperationException("STUB");
     }
 
-    public /*@NonNull*/ String getId() {
+    public @NonNull String getId() {
         return id;
     }
 
-    public /*@Nullable*/ DiskInfo getDisk() {
+    public @Nullable DiskInfo getDisk() {
         return disk;
     }
 
-    public /*@Nullable*/ String getDiskId() {
+    public @Nullable String getDiskId() {
         throw new UnsupportedOperationException("STUB");
     }
 
@@ -151,7 +154,7 @@ public class VolumeInfo implements Parcelable {
         return sStateToDescrip.get(state, 0);
     }
 
-    public /*@Nullable*/ String getFsUuid() {
+    public @Nullable String getFsUuid() {
         return fsUuid;
     }
 
@@ -159,7 +162,7 @@ public class VolumeInfo implements Parcelable {
         return mountUserId;
     }
 
-    public /*@Nullable*/ String getDescription() {
+    public @Nullable String getDescription() {
         throw new UnsupportedOperationException("STUB");
     }
 

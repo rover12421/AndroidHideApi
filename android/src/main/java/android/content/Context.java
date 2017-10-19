@@ -16,27 +16,18 @@
 
 package android.content;
 
+import android.annotation.NonNull;
+import android.annotation.Nullable;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.content.res.ColorStateList;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
+import android.content.res.*;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.StatFs;
-import android.os.UserHandle;
-import android.os.UserManager;
+import android.os.*;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.view.Display;
@@ -44,12 +35,7 @@ import android.view.DisplayAdjustments;
 import android.view.ViewDebug;
 import android.view.WindowManager;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -455,7 +441,7 @@ public abstract class Context {
      * @return The string data associated with the resource, stripped of styled
      *         text information.
      */
-    /*@NonNull*/
+    @NonNull
     public final String getString(/*@StringRes*/ int resId) {
         return getResources().getString(resId);
     }
@@ -471,7 +457,7 @@ public abstract class Context {
      * @return The string data associated with the resource, formatted and
      *         stripped of styled text information.
      */
-    /*@NonNull*/
+    @NonNull
     public final String getString(/*@StringRes*/ int resId, Object... formatArgs) {
         return getResources().getString(resId, formatArgs);
     }
@@ -504,7 +490,7 @@ public abstract class Context {
      * @throws android.content.res.Resources.NotFoundException if the given ID
      *         does not exist.
      */
-    /*@Nullable*/
+    @Nullable
     public final Drawable getDrawable(/*@DrawableRes*/ int id) {
         return getResources().getDrawable(id, getTheme());
     }
@@ -521,7 +507,7 @@ public abstract class Context {
      * @throws android.content.res.Resources.NotFoundException if the given ID
      *         does not exist.
      */
-    /*@Nullable*/
+    @Nullable
     public final ColorStateList getColorStateList(/*@ColorRes*/ int id) {
         return getResources().getColorStateList(id, getTheme());
     }
@@ -606,14 +592,18 @@ public abstract class Context {
     public abstract String getPackageName();
 
     /** @hide Return the name of the base context this context is derived from. */
-    public abstract String getBasePackageName();
+    public String getBasePackageName(){
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /** @hide Return the package name that should be used for app ops calls from
      * this context.  This is the same as {@link #getBasePackageName()} except in
      * cases where system components are loaded into other app processes, in which
      * case this will be the name of the primary package in that process (so that app
      * ops uid verification will work with the name). */
-    public abstract String getOpPackageName();
+    public String getOpPackageName() {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /** Return the full application info for this context's package. */
     public abstract ApplicationInfo getApplicationInfo();
@@ -957,8 +947,8 @@ public abstract class Context {
      * @see Environment#isExternalStorageEmulated(File)
      * @see Environment#isExternalStorageRemovable(File)
      */
-    /*@Nullable*/
-    public abstract File getExternalFilesDir(/*@Nullable*/ String type);
+    @Nullable
+    public abstract File getExternalFilesDir(@Nullable String type);
 
     /**
      * Returns absolute paths to application-specific directories on all
@@ -1205,7 +1195,7 @@ public abstract class Context {
      * @see Environment#isExternalStorageEmulated(File)
      * @see Environment#isExternalStorageRemovable(File)
      */
-    /*@Nullable*/
+    @Nullable
     public abstract File getExternalCacheDir();
 
     /**
@@ -1401,7 +1391,7 @@ public abstract class Context {
      */
     public abstract SQLiteDatabase openOrCreateDatabase(String name,
             int mode, CursorFactory factory,
-            /*@Nullable*/ DatabaseErrorHandler errorHandler);
+            @Nullable DatabaseErrorHandler errorHandler);
 
     /**
      * Move an existing database file from the given source storage context to
@@ -1574,7 +1564,7 @@ public abstract class Context {
      * @see PackageManager#resolveActivity
      */
     public abstract void startActivity(/*@RequiresPermission*/ Intent intent,
-            /*@Nullable*/ Bundle options);
+            @Nullable Bundle options);
 
     /**
      * Version of {@link #startActivity(Intent, Bundle)} that allows you to specify the
@@ -1590,7 +1580,7 @@ public abstract class Context {
      * @throws ActivityNotFoundException &nbsp;
      * @hide
      */
-    public void startActivityAsUser(/*@RequiresPermission*/ Intent intent, /*@Nullable*/ Bundle options,
+    public void startActivityAsUser(/*@RequiresPermission*/ Intent intent, @Nullable Bundle options,
             UserHandle userId) {
         throw new RuntimeException("Not implemented. Must override in a subclass.");
     }
@@ -1609,7 +1599,7 @@ public abstract class Context {
      * @hide
      */
     public void startActivityForResult(
-            /*@NonNull*/ String who, Intent intent, int requestCode, /*@Nullable*/ Bundle options) {
+            @NonNull String who, Intent intent, int requestCode, @Nullable Bundle options) {
         throw new RuntimeException("This method is only implemented for Activity-based Contexts. "
                 + "Check canStartActivityForResult() before calling.");
     }
@@ -1738,7 +1728,7 @@ public abstract class Context {
      * @see #startIntentSender(IntentSender, Intent, int, int, int)
      */
     public abstract void startIntentSender(IntentSender intent,
-            /*@Nullable*/ Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags,
+            @Nullable Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags,
             Bundle options) throws IntentSender.SendIntentException;
 
     /**
@@ -1788,7 +1778,7 @@ public abstract class Context {
      * @see #sendOrderedBroadcast(Intent, String, BroadcastReceiver, Handler, int, String, Bundle)
      */
     public abstract void sendBroadcast(/*@RequiresPermission*/ Intent intent,
-            /*@Nullable*/ String receiverPermission);
+            @Nullable String receiverPermission);
 
 
     /**
@@ -1814,8 +1804,10 @@ public abstract class Context {
      * @see #sendOrderedBroadcast(Intent, String, BroadcastReceiver, Handler, int, String, Bundle)
      * @hide
      */
-    public abstract void sendBroadcastMultiplePermissions(Intent intent,
-            String[] receiverPermissions);
+    public void sendBroadcastMultiplePermissions(Intent intent,
+            String[] receiverPermissions) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Broadcast the given intent to all interested BroadcastReceivers, allowing
@@ -1845,17 +1837,21 @@ public abstract class Context {
      * @hide
      */
     /*@SystemApi*/
-    public abstract void sendBroadcast(Intent intent,
-            /*@Nullable*/ String receiverPermission,
-            /*@Nullable*/ Bundle options);
+    public void sendBroadcast(Intent intent,
+            @Nullable String receiverPermission,
+            @Nullable Bundle options) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Like {@link #sendBroadcast(Intent, String)}, but also allows specification
      * of an associated app op as per {@link android.app.AppOpsManager}.
      * @hide
      */
-    public abstract void sendBroadcast(Intent intent,
-            String receiverPermission, int appOp);
+    public void sendBroadcast(Intent intent,
+            String receiverPermission, int appOp) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Broadcast the given intent to all interested BroadcastReceivers, delivering
@@ -1878,7 +1874,7 @@ public abstract class Context {
      * @see #sendOrderedBroadcast(Intent, String, BroadcastReceiver, Handler, int, String, Bundle)
      */
     public abstract void sendOrderedBroadcast(/*@RequiresPermission*/ Intent intent,
-            /*@Nullable*/ String receiverPermission);
+            @Nullable String receiverPermission);
 
     /**
      * Version of {@link #sendBroadcast(Intent)} that allows you to
@@ -1920,10 +1916,10 @@ public abstract class Context {
      * @see #registerReceiver
      * @see android.app.Activity#RESULT_OK
      */
-    public abstract void sendOrderedBroadcast(/*@RequiresPermission*/ /*@NonNull*/ Intent intent,
-            /*@Nullable*/ String receiverPermission, /*@Nullable*/ BroadcastReceiver resultReceiver,
-            /*@Nullable*/ Handler scheduler, int initialCode, /*@Nullable*/ String initialData,
-            /*@Nullable*/ Bundle initialExtras);
+    public abstract void sendOrderedBroadcast(/*@RequiresPermission*/ @NonNull Intent intent,
+            @Nullable String receiverPermission, @Nullable BroadcastReceiver resultReceiver,
+            @Nullable Handler scheduler, int initialCode, @Nullable String initialData,
+            @Nullable Bundle initialExtras);
 
     /**
      * Version of {@link #sendBroadcast(Intent)} that allows you to
@@ -1969,10 +1965,12 @@ public abstract class Context {
      * @hide
      */
     /*@SystemApi*/
-    public abstract void sendOrderedBroadcast(/*@NonNull*/ Intent intent,
-            /*@Nullable*/ String receiverPermission, /*@Nullable*/ Bundle options,
-            /*@Nullable*/ BroadcastReceiver resultReceiver, /*@Nullable*/ Handler scheduler,
-            int initialCode, /*@Nullable*/ String initialData, /*@Nullable*/ Bundle initialExtras);
+    public void sendOrderedBroadcast(@NonNull Intent intent,
+            @Nullable String receiverPermission, @Nullable Bundle options,
+            @Nullable BroadcastReceiver resultReceiver, @Nullable Handler scheduler,
+            int initialCode, @Nullable String initialData, @Nullable Bundle initialExtras) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Like {@link #sendOrderedBroadcast(Intent, String, BroadcastReceiver, android.os.Handler,
@@ -1980,10 +1978,12 @@ public abstract class Context {
      * of an associated app op as per {@link android.app.AppOpsManager}.
      * @hide
      */
-    public abstract void sendOrderedBroadcast(Intent intent,
+    public void sendOrderedBroadcast(Intent intent,
             String receiverPermission, int appOp, BroadcastReceiver resultReceiver,
             Handler scheduler, int initialCode, String initialData,
-            Bundle initialExtras);
+            Bundle initialExtras) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Version of {@link #sendBroadcast(Intent)} that allows you to specify the
@@ -2013,7 +2013,7 @@ public abstract class Context {
      * @see #sendBroadcast(Intent, String)
      */
     public abstract void sendBroadcastAsUser(/*@RequiresPermission*/ Intent intent,
-            UserHandle user, /*@Nullable*/ String receiverPermission);
+            UserHandle user, @Nullable String receiverPermission);
 
 
     /**
@@ -2034,8 +2034,10 @@ public abstract class Context {
      *
      * @hide
      */
-    public abstract void sendBroadcastAsUser(/*@RequiresPermission*/ Intent intent,
-            UserHandle user, /*@Nullable*/ String receiverPermission, int appOp);
+    public void sendBroadcastAsUser(/*@RequiresPermission*/ Intent intent,
+            UserHandle user, @Nullable String receiverPermission, int appOp) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Version of
@@ -2068,9 +2070,9 @@ public abstract class Context {
      * @see #sendOrderedBroadcast(Intent, String, BroadcastReceiver, Handler, int, String, Bundle)
      */
     public abstract void sendOrderedBroadcastAsUser(/*@RequiresPermission*/ Intent intent,
-            UserHandle user, /*@Nullable*/ String receiverPermission, BroadcastReceiver resultReceiver,
-            /*@Nullable*/ Handler scheduler, int initialCode, /*@Nullable*/ String initialData,
-            /*@Nullable*/  Bundle initialExtras);
+            UserHandle user, @Nullable String receiverPermission, BroadcastReceiver resultReceiver,
+            @Nullable Handler scheduler, int initialCode, @Nullable String initialData,
+            @Nullable  Bundle initialExtras);
 
     /**
      * Similar to above but takes an appOp as well, to enforce restrictions.
@@ -2078,10 +2080,12 @@ public abstract class Context {
      *       BroadcastReceiver, Handler, int, String, Bundle)
      * @hide
      */
-    public abstract void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,
-            /*@Nullable*/ String receiverPermission, int appOp, BroadcastReceiver resultReceiver,
-            /*@Nullable*/ Handler scheduler, int initialCode, /*@Nullable*/ String initialData,
-            /*@Nullable*/  Bundle initialExtras);
+    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,
+            @Nullable String receiverPermission, int appOp, BroadcastReceiver resultReceiver,
+            @Nullable Handler scheduler, int initialCode, @Nullable String initialData,
+            @Nullable  Bundle initialExtras) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Similar to above but takes an appOp as well, to enforce restrictions, and an options Bundle.
@@ -2089,10 +2093,12 @@ public abstract class Context {
      *       BroadcastReceiver, Handler, int, String, Bundle)
      * @hide
      */
-    public abstract void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,
-            /*@Nullable*/ String receiverPermission, int appOp, /*@Nullable*/ Bundle options,
-            BroadcastReceiver resultReceiver, /*@Nullable*/ Handler scheduler, int initialCode,
-            /*@Nullable*/ String initialData, /*@Nullable*/  Bundle initialExtras);
+    public void sendOrderedBroadcastAsUser(Intent intent, UserHandle user,
+            @Nullable String receiverPermission, int appOp, @Nullable Bundle options,
+            BroadcastReceiver resultReceiver, @Nullable Handler scheduler, int initialCode,
+            @Nullable String initialData, @Nullable  Bundle initialExtras) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * <p>Perform a {@link #sendBroadcast(Intent)} that is "sticky," meaning the
@@ -2171,8 +2177,8 @@ public abstract class Context {
     @Deprecated
     public abstract void sendStickyOrderedBroadcast(/*@RequiresPermission*/ Intent intent,
             BroadcastReceiver resultReceiver,
-            /*@Nullable*/ Handler scheduler, int initialCode, /*@Nullable*/ String initialData,
-            /*@Nullable*/ Bundle initialExtras);
+            @Nullable Handler scheduler, int initialCode, @Nullable String initialData,
+            @Nullable Bundle initialExtras);
 
     /**
      * <p>Remove the data previously sent with {@link #sendStickyBroadcast},
@@ -2223,8 +2229,10 @@ public abstract class Context {
      * This is just here for sending CONNECTIVITY_ACTION.
      */
     @Deprecated
-    public abstract void sendStickyBroadcastAsUser(/*@RequiresPermission*/ Intent intent,
-            UserHandle user, Bundle options);
+    public void sendStickyBroadcastAsUser(/*@RequiresPermission*/ Intent intent,
+            UserHandle user, Bundle options) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * <p>Version of
@@ -2262,8 +2270,8 @@ public abstract class Context {
     @Deprecated
     public abstract void sendStickyOrderedBroadcastAsUser(/*@RequiresPermission*/ Intent intent,
             UserHandle user, BroadcastReceiver resultReceiver,
-            /*@Nullable*/ Handler scheduler, int initialCode, /*@Nullable*/ String initialData,
-            /*@Nullable*/ Bundle initialExtras);
+            @Nullable Handler scheduler, int initialCode, @Nullable String initialData,
+            @Nullable Bundle initialExtras);
 
     /**
      * <p>Version of {@link #removeStickyBroadcast(Intent)} that allows you to specify the
@@ -2338,8 +2346,8 @@ public abstract class Context {
      * @see #sendBroadcast
      * @see #unregisterReceiver
      */
-    /*@Nullable*/
-    public abstract Intent registerReceiver(/*@Nullable*/ BroadcastReceiver receiver,
+    @Nullable
+    public abstract Intent registerReceiver(@Nullable BroadcastReceiver receiver,
                                             IntentFilter filter);
 
     /**
@@ -2373,10 +2381,10 @@ public abstract class Context {
      * @see #sendBroadcast
      * @see #unregisterReceiver
      */
-    /*@Nullable*/
+    @Nullable
     public abstract Intent registerReceiver(BroadcastReceiver receiver,
-            IntentFilter filter, /*@Nullable*/ String broadcastPermission,
-            /*@Nullable*/ Handler scheduler);
+            IntentFilter filter, @Nullable String broadcastPermission,
+            @Nullable Handler scheduler);
 
     /**
      * @hide
@@ -2402,10 +2410,12 @@ public abstract class Context {
      * @see #sendBroadcast
      * @see #unregisterReceiver
      */
-    /*@Nullable*/
-    public abstract Intent registerReceiverAsUser(BroadcastReceiver receiver,
-            UserHandle user, IntentFilter filter, /*@Nullable*/ String broadcastPermission,
-            /*@Nullable*/ Handler scheduler);
+    @Nullable
+    public Intent registerReceiverAsUser(BroadcastReceiver receiver,
+            UserHandle user, IntentFilter filter, @Nullable String broadcastPermission,
+            @Nullable Handler scheduler) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Unregister a previously registered BroadcastReceiver.  <em>All</em>
@@ -2472,7 +2482,7 @@ public abstract class Context {
      * @see #stopService
      * @see #bindService
      */
-    /*@Nullable*/
+    @Nullable
     public abstract ComponentName startService(Intent service);
 
     /**
@@ -2506,12 +2516,16 @@ public abstract class Context {
     /**
      * @hide like {@link #startService(Intent)} but for a specific user.
      */
-    public abstract ComponentName startServiceAsUser(Intent service, UserHandle user);
+    public ComponentName startServiceAsUser(Intent service, UserHandle user) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * @hide like {@link #stopService(Intent)} but for a specific user.
      */
-    public abstract boolean stopServiceAsUser(Intent service, UserHandle user);
+    public boolean stopServiceAsUser(Intent service, UserHandle user) {
+        throw new UnsupportedOperationException("STUB abstract");
+    }
 
     /**
      * Connect to an application service, creating it if needed.  This defines
@@ -2559,7 +2573,7 @@ public abstract class Context {
      * @see #BIND_NOT_FOREGROUND
      */
     public abstract boolean bindService(/*@RequiresPermission*/ Intent service,
-            /*@NonNull*/ ServiceConnection conn, @BindServiceFlags int flags);
+            @NonNull ServiceConnection conn, @BindServiceFlags int flags);
 
     /**
      * Same as {@link #bindService(Intent, ServiceConnection, int)}, but with an explicit userHandle
@@ -2594,7 +2608,7 @@ public abstract class Context {
      *
      * @see #bindService
      */
-    public abstract void unbindService(/*@NonNull*/ ServiceConnection conn);
+    public abstract void unbindService(@NonNull ServiceConnection conn);
 
     /**
      * Start executing an {@link android.app.Instrumentation} class.  The given
@@ -2619,8 +2633,8 @@ public abstract class Context {
      * @return {@code true} if the instrumentation was successfully started,
      * else {@code false} if it could not be found.
      */
-    public abstract boolean startInstrumentation(/*@NonNull*/ ComponentName className,
-            /*@Nullable*/ String profileFile, /*@Nullable*/ Bundle arguments);
+    public abstract boolean startInstrumentation(@NonNull ComponentName className,
+            @Nullable String profileFile, @Nullable Bundle arguments);
 
     /** @hide */
 //    @StringDef({
@@ -2837,7 +2851,7 @@ public abstract class Context {
      * @see android.os.HardwarePropertiesManager
      * @see #HARDWARE_PROPERTIES_SERVICE
      */
-    public abstract Object getSystemService(@ServiceName /*@NonNull*/ String name);
+    public abstract Object getSystemService(@ServiceName @NonNull String name);
 
     /**
      * Return the handle to a system-level service by class.
@@ -3677,11 +3691,11 @@ public abstract class Context {
      */
     //@CheckResult(suggest="#enforcePermission(String,int,int,String)")
     @PackageManager.PermissionResult
-    public abstract int checkPermission(/*@NonNull*/ String permission, int pid, int uid);
+    public abstract int checkPermission(@NonNull String permission, int pid, int uid);
 
     /** @hide */
     @PackageManager.PermissionResult
-    public abstract int checkPermission(/*@NonNull*/ String permission, int pid, int uid,
+    public abstract int checkPermission(@NonNull String permission, int pid, int uid,
             IBinder callerToken);
 
     /**
@@ -3707,7 +3721,7 @@ public abstract class Context {
      */
     //@CheckResult(suggest="#enforceCallingPermission(String,String)")
     @PackageManager.PermissionResult
-    public abstract int checkCallingPermission(/*@NonNull*/ String permission);
+    public abstract int checkCallingPermission(@NonNull String permission);
 
     /**
      * Determine whether the calling process of an IPC <em>or you</em> have been
@@ -3727,7 +3741,7 @@ public abstract class Context {
      */
     //@CheckResult(suggest="#enforceCallingOrSelfPermission(String,String)")
     @PackageManager.PermissionResult
-    public abstract int checkCallingOrSelfPermission(/*@NonNull*/ String permission);
+    public abstract int checkCallingOrSelfPermission(@NonNull String permission);
 
     /**
      * Determine whether <em>you</em> have been granted a particular permission.
@@ -3741,7 +3755,7 @@ public abstract class Context {
      * @see #checkCallingPermission(String)
      */
     @PackageManager.PermissionResult
-    public abstract int checkSelfPermission(/*@NonNull*/ String permission);
+    public abstract int checkSelfPermission(@NonNull String permission);
 
     /**
      * If the given permission is not allowed for a particular process
@@ -3756,7 +3770,7 @@ public abstract class Context {
      * @see #checkPermission(String, int, int)
      */
     public abstract void enforcePermission(
-            /*@NonNull*/ String permission, int pid, int uid, /*@Nullable*/ String message);
+            @NonNull String permission, int pid, int uid, @Nullable String message);
 
     /**
      * If the calling process of an IPC you are handling has not been
@@ -3777,7 +3791,7 @@ public abstract class Context {
      * @see #checkCallingPermission(String)
      */
     public abstract void enforceCallingPermission(
-            /*@NonNull*/ String permission, /*@Nullable*/ String message);
+            @NonNull String permission, @Nullable String message);
 
     /**
      * If neither you nor the calling process of an IPC you are
@@ -3793,7 +3807,7 @@ public abstract class Context {
      * @see #checkCallingOrSelfPermission(String)
      */
     public abstract void enforceCallingOrSelfPermission(
-            /*@NonNull*/ String permission, /*@Nullable*/ String message);
+            @NonNull String permission, @Nullable String message);
 
     /**
      * Grant permission to access a specific Uri to another package, regardless
@@ -3960,8 +3974,8 @@ public abstract class Context {
      * {@link PackageManager#PERMISSION_DENIED} if it is not.
      */
     //@CheckResult(suggest="#enforceUriPermission(Uri,String,String,int,int,int,String)")
-    public abstract int checkUriPermission(/*@Nullable*/ Uri uri, /*@Nullable*/ String readPermission,
-            /*@Nullable*/ String writePermission, int pid, int uid,
+    public abstract int checkUriPermission(@Nullable Uri uri, @Nullable String readPermission,
+            @Nullable String writePermission, int pid, int uid,
             /*@Intent.AccessUriMode*/ int modeFlags);
 
     /**
@@ -4049,9 +4063,9 @@ public abstract class Context {
      * @see #checkUriPermission(Uri, String, String, int, int, int)
      */
     public abstract void enforceUriPermission(
-            /*@Nullable*/ Uri uri, /*@Nullable*/ String readPermission,
-            /*@Nullable*/ String writePermission, int pid, int uid, /*@Intent.AccessUriMode*/ int modeFlags,
-            /*@Nullable*/ String message);
+            @Nullable Uri uri, @Nullable String readPermission,
+            @Nullable String writePermission, int pid, int uid, /*@Intent.AccessUriMode*/ int modeFlags,
+            @Nullable String message);
 
     /** @hide */
 //    @IntDef(flag = true,
@@ -4189,7 +4203,7 @@ public abstract class Context {
      * @return A {@link Context} with the given configuration override.
      */
     public abstract Context createConfigurationContext(
-            /*@NonNull*/ Configuration overrideConfiguration);
+            @NonNull Configuration overrideConfiguration);
 
     /**
      * Return a new Context object for the current Context but whose resources
@@ -4209,7 +4223,7 @@ public abstract class Context {
      *
      * @return A {@link Context} for the display.
      */
-    public abstract Context createDisplayContext(/*@NonNull*/ Display display);
+    public abstract Context createDisplayContext(@NonNull Display display);
 
     /**
      * Return a new Context object for the current Context but whose storage

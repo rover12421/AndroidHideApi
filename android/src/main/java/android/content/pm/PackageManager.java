@@ -30,6 +30,7 @@ import android.Manifest;
 //import android.annotation.TestApi;
 //import android.annotation.UserIdInt;
 //import android.annotation.XmlRes;
+import android.annotation.NonNull;
 import android.app.PackageDeleteObserver;
 import android.app.PackageInstallObserver;
 import android.app.admin.DevicePolicyManager;
@@ -3220,8 +3221,8 @@ public abstract class PackageManager {
      * @return Whether the permission is restricted by policy.
      */
     ////@CheckResult
-    public abstract boolean isPermissionRevokedByPolicy(/*@NonNull*/ String permName,
-            /*@NonNull*/ String pkgName);
+    public abstract boolean isPermissionRevokedByPolicy(@NonNull String permName,
+            @NonNull String pkgName);
 
     /**
      * Gets the package name of the component controlling runtime permissions.
@@ -3328,8 +3329,8 @@ public abstract class PackageManager {
      * @hide
      */
     //@SystemApi
-    public abstract void grantRuntimePermission(/*@NonNull*/ String packageName,
-            /*@NonNull*/ String permissionName, /*@NonNull*/ UserHandle user);
+    public abstract void grantRuntimePermission(@NonNull String packageName,
+            @NonNull String permissionName, @NonNull UserHandle user);
 
     /**
      * Revoke a runtime permission that was previously granted by {@link
@@ -3354,8 +3355,8 @@ public abstract class PackageManager {
      * @hide
      */
     //@SystemApi
-    public abstract void revokeRuntimePermission(/*@NonNull*/ String packageName,
-            /*@NonNull*/ String permissionName, /*@NonNull*/ UserHandle user);
+    public abstract void revokeRuntimePermission(@NonNull String packageName,
+            @NonNull String permissionName, @NonNull UserHandle user);
 
     /**
      * Gets the state flags associated with a permission.
@@ -3369,7 +3370,7 @@ public abstract class PackageManager {
      */
     //@SystemApi
     public abstract @PermissionFlags int getPermissionFlags(String permissionName,
-            String packageName, /*@NonNull*/ UserHandle user);
+            String packageName, @NonNull UserHandle user);
 
     /**
      * Updates the flags associated with a permission by replacing the flags in
@@ -3386,7 +3387,7 @@ public abstract class PackageManager {
     //@SystemApi
     public abstract void updatePermissionFlags(String permissionName,
             String packageName, @PermissionFlags int flagMask, int flagValues,
-            /*@NonNull*/ UserHandle user);
+            @NonNull UserHandle user);
 
     /**
      * Gets whether you should show UI with rationale for requesting a permission.
@@ -3410,7 +3411,7 @@ public abstract class PackageManager {
      *
      * @hide
      */
-    public Intent buildRequestPermissionsIntent(/*@NonNull*/ String[] permissions) {
+    public Intent buildRequestPermissionsIntent(@NonNull String[] permissions) {
 //        if (ArrayUtils.isEmpty(permissions)) {
 //           throw new IllegalArgumentException("permission cannot be null or empty");
 //        }
@@ -3601,7 +3602,7 @@ public abstract class PackageManager {
      *
      * @hide
      */
-    public abstract /*@NonNull*/ byte[] getEphemeralCookie();
+    public abstract @NonNull byte[] getEphemeralCookie();
 
     /**
      * Sets the ephemeral application cookie for the calling app. Non
@@ -3621,7 +3622,7 @@ public abstract class PackageManager {
      *
      * @hide
      */
-    public abstract boolean setEphemeralCookie(/*@NonNull*/  byte[] cookie);
+    public abstract boolean setEphemeralCookie(@NonNull  byte[] cookie);
 
     /**
      * Get a list of shared libraries that are available on the
@@ -3640,7 +3641,7 @@ public abstract class PackageManager {
      *
      * @hide
      */
-    public abstract /*@NonNull*/ String getServicesSystemSharedLibraryPackageName();
+    public abstract @NonNull String getServicesSystemSharedLibraryPackageName();
 
     /**
      * Get the name of the package hosting the shared components shared library.
@@ -3649,7 +3650,7 @@ public abstract class PackageManager {
      *
      * @hide
      */
-    public abstract /*@NonNull*/ String getSharedSystemSharedLibraryPackageName();
+    public abstract @NonNull String getSharedSystemSharedLibraryPackageName();
 
     /**
      * Get a list of features that are available on the
@@ -5354,8 +5355,8 @@ public abstract class PackageManager {
      * (the number of distinct IntentFilter records, not the number of unique
      * activity components) that were found.
      */
-    public abstract int getPreferredActivities(/*@NonNull*/ List<IntentFilter> outFilters,
-            /*@NonNull*/ List<ComponentName> outActivities, String packageName);
+    public abstract int getPreferredActivities(@NonNull List<IntentFilter> outFilters,
+            @NonNull List<ComponentName> outActivities, String packageName);
 
     /**
      * Ask for the set of available 'home' activities and the current explicit
@@ -5582,14 +5583,14 @@ public abstract class PackageManager {
     /** {@hide} */
     public abstract /*@CheckResult*/ VolumeInfo getPackageCurrentVolume(ApplicationInfo app);
     /** {@hide} */
-    public abstract /*@NonNull*/ List<VolumeInfo> getPackageCandidateVolumes(ApplicationInfo app);
+    public abstract @NonNull List<VolumeInfo> getPackageCandidateVolumes(ApplicationInfo app);
 
     /** {@hide} */
     public abstract int movePrimaryStorage(VolumeInfo vol);
     /** {@hide} */
     public abstract /*@CheckResult*/ VolumeInfo getPrimaryStorageCurrentVolume();
     /** {@hide} */
-    public abstract /*@NonNull*/ List<VolumeInfo> getPrimaryStorageCandidateVolumes();
+    public abstract @NonNull List<VolumeInfo> getPrimaryStorageCandidateVolumes();
 
     /**
      * Returns the device identity that verifiers can use to associate their scheme to a particular
@@ -5611,7 +5612,7 @@ public abstract class PackageManager {
      * Return interface that offers the ability to install, upgrade, and remove
      * applications on the device.
      */
-    public abstract /*@NonNull*/ PackageInstaller getPackageInstaller();
+    public abstract @NonNull PackageInstaller getPackageInstaller();
 
     /**
      * Adds a {@code CrossProfileIntentFilter}. After calling this method all
