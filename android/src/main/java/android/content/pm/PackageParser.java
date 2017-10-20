@@ -1,11 +1,30 @@
+/*
+ * Copyright (C) 2007 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package android.content.pm;
 
+import android.annotation.NonNull;
+import android.annotation.Nullable;
 import android.content.ComponentName;
 import android.content.IntentFilter;
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.UserHandle;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.DisplayMetrics;
@@ -20,7 +39,6 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Parser for package files (APKs) on disk. This supports apps packaged either
@@ -53,7 +71,9 @@ public class PackageParser {
         public final int fileVersion;
 
         public NewPermissionInfo(String name, int sdkVersion, int fileVersion) {
-            throw new UnsupportedOperationException("STUB");
+            this.name = name;
+            this.sdkVersion = sdkVersion;
+            this.fileVersion = fileVersion;
         }
     }
 
@@ -64,7 +84,9 @@ public class PackageParser {
         public final int targetSdk;
 
         public SplitPermissionInfo(String rootPerm, String[] newPerms, int targetSdk) {
-            throw new UnsupportedOperationException("STUB");
+            this.rootPerm = rootPerm;
+            this.newPerms = newPerms;
+            this.targetSdk = targetSdk;
         }
     }
 
@@ -78,7 +100,12 @@ public class PackageParser {
      * @hide
      */
     public static final PackageParser.NewPermissionInfo NEW_PERMISSIONS[] =
-        new PackageParser.NewPermissionInfo[] {};
+            new PackageParser.NewPermissionInfo[] {
+                    new PackageParser.NewPermissionInfo(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            android.os.Build.VERSION_CODES.DONUT, 0),
+                    new PackageParser.NewPermissionInfo(android.Manifest.permission.READ_PHONE_STATE,
+                            android.os.Build.VERSION_CODES.DONUT, 0)
+            };
 
     /**
      * List of permissions that have been split into more granular or dependent
@@ -86,8 +113,21 @@ public class PackageParser {
      * @hide
      */
     public static final PackageParser.SplitPermissionInfo SPLIT_PERMISSIONS[] =
-        new PackageParser.SplitPermissionInfo[] {
-    };
+            new PackageParser.SplitPermissionInfo[] {
+                    // READ_EXTERNAL_STORAGE is always required when an app requests
+                    // WRITE_EXTERNAL_STORAGE, because we can't have an app that has
+                    // write access without read access.  The hack here with the target
+                    // target SDK version ensures that this grant is always done.
+                    new PackageParser.SplitPermissionInfo(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            new String[] { android.Manifest.permission.READ_EXTERNAL_STORAGE },
+                            android.os.Build.VERSION_CODES.CUR_DEVELOPMENT+1),
+                    new PackageParser.SplitPermissionInfo(android.Manifest.permission.READ_CONTACTS,
+                            new String[] { android.Manifest.permission.READ_CALL_LOG },
+                            android.os.Build.VERSION_CODES.JELLY_BEAN),
+                    new PackageParser.SplitPermissionInfo(android.Manifest.permission.WRITE_CONTACTS,
+                            new String[] { android.Manifest.permission.WRITE_CALL_LOG },
+                            android.os.Build.VERSION_CODES.JELLY_BEAN)
+            };
 
 
     static class ParsePackageItemArgs {
@@ -100,10 +140,20 @@ public class PackageParser {
         final int logoRes;
         final int bannerRes;
 
+        String tag;
+        TypedArray sa;
+
         ParsePackageItemArgs(Package _owner, String[] _outError,
-                int _nameRes, int _labelRes, int _iconRes, int _roundIconRes, int _logoRes,
-                int _bannerRes) {
-            throw new UnsupportedOperationException("STUB");
+                             int _nameRes, int _labelRes, int _iconRes, int _roundIconRes, int _logoRes,
+                             int _bannerRes) {
+            owner = _owner;
+            outError = _outError;
+            nameRes = _nameRes;
+            labelRes = _labelRes;
+            iconRes = _iconRes;
+            logoRes = _logoRes;
+            bannerRes = _bannerRes;
+            roundIconRes = _roundIconRes;
         }
     }
 
@@ -116,13 +166,16 @@ public class PackageParser {
         int flags;
 
         public ParseComponentArgs(Package _owner, String[] _outError,
-                int _nameRes, int _labelRes, int _iconRes, int _roundIconRes, int _logoRes,
-                int _bannerRes,
-                String[] _sepProcesses, int _processRes,
-                int _descriptionRes, int _enabledRes) {
+                                  int _nameRes, int _labelRes, int _iconRes, int _roundIconRes, int _logoRes,
+                                  int _bannerRes,
+                                  String[] _sepProcesses, int _processRes,
+                                  int _descriptionRes, int _enabledRes) {
             super(_owner, _outError, _nameRes, _labelRes, _iconRes, _roundIconRes, _logoRes,
                     _bannerRes);
-            throw new UnsupportedOperationException("STUB");
+            sepProcesses = _sepProcesses;
+            processRes = _processRes;
+            descriptionRes = _descriptionRes;
+            enabledRes = _enabledRes;
         }
     }
 
@@ -170,13 +223,31 @@ public class PackageParser {
         public final boolean isolatedSplits;
 
         public PackageLite(String codePath, ApkLite baseApk, String[] splitNames,
-                boolean[] isFeatureSplits, String[] usesSplitNames, String[] configForSplit,
-                String[] splitCodePaths, int[] splitRevisionCodes) {
-            throw new UnsupportedOperationException("STUB");
+                           boolean[] isFeatureSplits, String[] usesSplitNames, String[] configForSplit,
+                           String[] splitCodePaths, int[] splitRevisionCodes) {
+            this.packageName = baseApk.packageName;
+            this.versionCode = baseApk.versionCode;
+            this.installLocation = baseApk.installLocation;
+            this.verifiers = baseApk.verifiers;
+            this.splitNames = splitNames;
+            this.isFeatureSplits = isFeatureSplits;
+            this.usesSplitNames = usesSplitNames;
+            this.configForSplit = configForSplit;
+            this.codePath = codePath;
+            this.baseCodePath = baseApk.codePath;
+            this.splitCodePaths = splitCodePaths;
+            this.baseRevisionCode = baseApk.revisionCode;
+            this.splitRevisionCodes = splitRevisionCodes;
+            this.coreApp = baseApk.coreApp;
+            this.debuggable = baseApk.debuggable;
+            this.multiArch = baseApk.multiArch;
+            this.use32bitAbi = baseApk.use32bitAbi;
+            this.extractNativeLibs = baseApk.extractNativeLibs;
+            this.isolatedSplits = baseApk.isolatedSplits;
         }
 
         public List<String> getAllCodePaths() {
-			throw new UnsupportedOperationException("STUB");
+            throw new UnsupportedOperationException("STUB");
         }
     }
 
@@ -204,28 +275,31 @@ public class PackageParser {
         public final boolean isolatedSplits;
 
         public ApkLite(String codePath, String packageName, String splitName, boolean isFeatureSplit,
-                String configForSplit, String usesSplitName, int versionCode, int revisionCode,
-                int installLocation, List<VerifierInfo> verifiers, Signature[] signatures,
-                Certificate[][] certificates, boolean coreApp, boolean debuggable,
-                boolean multiArch, boolean use32bitAbi, boolean extractNativeLibs,
-                boolean isolatedSplits) {
-            throw new UnsupportedOperationException("STUB");
+                       String configForSplit, String usesSplitName, int versionCode, int revisionCode,
+                       int installLocation, List<VerifierInfo> verifiers, Signature[] signatures,
+                       Certificate[][] certificates, boolean coreApp, boolean debuggable,
+                       boolean multiArch, boolean use32bitAbi, boolean extractNativeLibs,
+                       boolean isolatedSplits) {
+            this.codePath = codePath;
+            this.packageName = packageName;
+            this.splitName = splitName;
+            this.isFeatureSplit = isFeatureSplit;
+            this.configForSplit = configForSplit;
+            this.usesSplitName = usesSplitName;
+            this.versionCode = versionCode;
+            this.revisionCode = revisionCode;
+            this.installLocation = installLocation;
+            this.verifiers = verifiers.toArray(new VerifierInfo[verifiers.size()]);
+            this.signatures = signatures;
+            this.certificates = certificates;
+            this.coreApp = coreApp;
+            this.debuggable = debuggable;
+            this.multiArch = multiArch;
+            this.use32bitAbi = use32bitAbi;
+            this.extractNativeLibs = extractNativeLibs;
+            this.isolatedSplits = isolatedSplits;
         }
     }
-
-    private ParsePackageItemArgs mParseInstrumentationArgs;
-    private ParseComponentArgs mParseActivityArgs;
-    private ParseComponentArgs mParseActivityAliasArgs;
-    private ParseComponentArgs mParseServiceArgs;
-    private ParseComponentArgs mParseProviderArgs;
-
-    /** If set to true, we will only allow package files that exactly match
-     *  the DTD.  Otherwise, we try to get as much from the package as we
-     *  can without failing.  This should normally be set to false, to
-     *  support extensions to the DTD in future versions. */
-    private static final boolean RIGID_PARSER = false;
-
-    private static final String TAG = "PackageParser";
 
     public PackageParser() {
         throw new UnsupportedOperationException("STUB");
@@ -297,11 +371,11 @@ public class PackageParser {
     }
 
     public static final boolean isApkFile(File file) {
-        return isApkPath(file.getName());
+        throw new UnsupportedOperationException("STUB");
     }
 
     public static boolean isApkPath(String path) {
-        return path.endsWith(".apk");
+        throw new UnsupportedOperationException("STUB");
     }
 
     /**
@@ -311,24 +385,31 @@ public class PackageParser {
      * @param flags indicating which optional information is included.
      */
     public static PackageInfo generatePackageInfo(PackageParser.Package p,
-            int gids[], int flags, long firstInstallTime, long lastUpdateTime,
-            Set<String> grantedPermissions, PackageUserState state) {
+                                                  int gids[], int flags, long firstInstallTime, long lastUpdateTime,
+                                                  Set<String> grantedPermissions, PackageUserState state) {
 
-        return generatePackageInfo(p, gids, flags, firstInstallTime, lastUpdateTime,
-                grantedPermissions, state, UserHandle.getCallingUserId());
+        throw new UnsupportedOperationException("STUB");
     }
 
+    /**
+     * Returns true if the package is installed and not hidden, or if the caller
+     * explicitly wanted all uninstalled and hidden packages as well.
+     * @param appInfo The applicationInfo of the app being checked.
+     */
+    private static boolean checkUseInstalledOrHidden(int flags, PackageUserState state,
+                                                     ApplicationInfo appInfo) {
+        throw new UnsupportedOperationException("STUB");
+    }
 
     public static boolean isAvailable(PackageUserState state) {
-        throw new UnsupportedOperationException("STUB");
+        return checkUseInstalledOrHidden(0, state, null);
     }
 
     public static PackageInfo generatePackageInfo(PackageParser.Package p,
-            int gids[], int flags, long firstInstallTime, long lastUpdateTime,
-            Set<String> grantedPermissions, PackageUserState state, int userId) {
+                                                  int gids[], int flags, long firstInstallTime, long lastUpdateTime,
+                                                  Set<String> grantedPermissions, PackageUserState state, int userId) {
         throw new UnsupportedOperationException("STUB");
     }
-
 
     public final static int PARSE_IS_SYSTEM = 1<<0;
     public final static int PARSE_CHATTY = 1<<1;
@@ -362,7 +443,6 @@ public class PackageParser {
         throw new UnsupportedOperationException("STUB");
     }
 
-
     /**
      * Parse the package at the given location. Automatically detects if the
      * package is a monolithic style (single APK file) or cluster style
@@ -391,7 +471,15 @@ public class PackageParser {
      * Equivalent to {@link #parsePackage(File, int, boolean)} with {@code useCaches == false}.
      */
     public Package parsePackage(File packageFile, int flags) throws PackageParserException {
-        return parsePackage(packageFile, flags, false /* useCaches */);
+        throw new UnsupportedOperationException("STUB");
+    }
+
+    protected Package fromCacheEntry(byte[] bytes) throws IOException {
+        throw new UnsupportedOperationException("STUB");
+    }
+
+    protected byte[] toCacheEntry(Package pkg) throws IOException {
+        throw new UnsupportedOperationException("STUB");
     }
 
     /**
@@ -454,6 +542,99 @@ public class PackageParser {
     static public Signature stringToSignature(String str) {
         throw new UnsupportedOperationException("STUB");
     }
+
+    /**
+     * Computes the targetSdkVersion to use at runtime. If the package is not
+     * compatible with this platform, populates {@code outError[0]} with an
+     * error message.
+     * <p>
+     * If {@code targetCode} is not specified, e.g. the value is {@code null},
+     * then the {@code targetVers} will be returned unmodified.
+     * <p>
+     * Otherwise, the behavior varies based on whether the current platform
+     * is a pre-release version, e.g. the {@code platformSdkCodenames} array
+     * has length > 0:
+     * <ul>
+     * <li>If this is a pre-release platform and the value specified by
+     * {@code targetCode} is contained within the array of allowed pre-release
+     * codenames, this method will return {@link Build.VERSION_CODES#CUR_DEVELOPMENT}.
+     * <li>If this is a released platform, this method will return -1 to
+     * indicate that the package is not compatible with this platform.
+     * </ul>
+     *
+     * @param targetVers targetSdkVersion number, if specified in the
+     *                   application manifest, or 0 otherwise
+     * @param targetCode targetSdkVersion code, if specified in the application
+     *                   manifest, or {@code null} otherwise
+     * @param platformSdkVersion platform SDK version number, typically
+     *                           Build.VERSION.SDK_INT
+     * @param platformSdkCodenames array of allowed pre-release SDK codenames
+     *                             for this platform
+     * @param outError output array to populate with error, if applicable
+     * @return the targetSdkVersion to use at runtime, or -1 if the package is
+     *         not compatible with this platform
+     * @hide Exposed for unit testing only.
+     */
+    public static int computeTargetSdkVersion(int targetVers,
+                                              @Nullable String targetCode, int platformSdkVersion,
+                                              @NonNull String[] platformSdkCodenames, @NonNull String[] outError) {
+        throw new UnsupportedOperationException("STUB");
+    }
+
+    /**
+     * Computes the minSdkVersion to use at runtime. If the package is not
+     * compatible with this platform, populates {@code outError[0]} with an
+     * error message.
+     * <p>
+     * If {@code minCode} is not specified, e.g. the value is {@code null},
+     * then behavior varies based on the {@code platformSdkVersion}:
+     * <ul>
+     * <li>If the platform SDK version is greater than or equal to the
+     * {@code minVers}, returns the {@code mniVers} unmodified.
+     * <li>Otherwise, returns -1 to indicate that the package is not
+     * compatible with this platform.
+     * </ul>
+     * <p>
+     * Otherwise, the behavior varies based on whether the current platform
+     * is a pre-release version, e.g. the {@code platformSdkCodenames} array
+     * has length > 0:
+     * <ul>
+     * <li>If this is a pre-release platform and the value specified by
+     * {@code targetCode} is contained within the array of allowed pre-release
+     * codenames, this method will return {@link Build.VERSION_CODES#CUR_DEVELOPMENT}.
+     * <li>If this is a released platform, this method will return -1 to
+     * indicate that the package is not compatible with this platform.
+     * </ul>
+     *
+     * @param minVers minSdkVersion number, if specified in the application
+     *                manifest, or 1 otherwise
+     * @param minCode minSdkVersion code, if specified in the application
+     *                manifest, or {@code null} otherwise
+     * @param platformSdkVersion platform SDK version number, typically
+     *                           Build.VERSION.SDK_INT
+     * @param platformSdkCodenames array of allowed prerelease SDK codenames
+     *                             for this platform
+     * @param outError output array to populate with error, if applicable
+     * @return the minSdkVersion to use at runtime, or -1 if the package is not
+     *         compatible with this platform
+     * @hide Exposed for unit testing only.
+     */
+    public static int computeMinSdkVersion(int minVers,
+                                           @Nullable String minCode, int platformSdkVersion,
+                                           @NonNull String[] platformSdkCodenames, @NonNull String[] outError) {
+        throw new UnsupportedOperationException("STUB");
+    }
+
+    /**
+     * @param configChanges The bit mask of configChanges fetched from AndroidManifest.xml.
+     * @param recreateOnConfigChanges The bit mask recreateOnConfigChanges fetched from
+     *                                AndroidManifest.xml.
+     * @hide Exposed for unit testing only.
+     */
+    public static int getActivityConfigChanges(int configChanges, int recreateOnConfigChanges) {
+        throw new UnsupportedOperationException("STUB");
+    }
+
 
     public static final PublicKey parsePublicKey(final String encodedPublicKey) {
         throw new UnsupportedOperationException("STUB");
@@ -777,9 +958,7 @@ public class PackageParser {
         }
 
         public String toString() {
-            return "Package{"
-                + Integer.toHexString(System.identityHashCode(this))
-                + " " + packageName + "}";
+            throw new UnsupportedOperationException("STUB");
         }
 
         @Override
@@ -818,7 +997,9 @@ public class PackageParser {
         String componentShortName;
 
         public Component(Package _owner) {
-            throw new UnsupportedOperationException("STUB");
+            owner = _owner;
+            intents = null;
+            className = null;
         }
 
         public Component(final ParsePackageItemArgs args, final PackageItemInfo outInfo) {
@@ -854,8 +1035,7 @@ public class PackageParser {
         }
 
         public void setPackageName(String packageName) {
-            componentName = null;
-            componentShortName = null;
+            throw new UnsupportedOperationException("STUB");
         }
     }
 
@@ -881,8 +1061,8 @@ public class PackageParser {
 
         public String toString() {
             return "Permission{"
-                + Integer.toHexString(System.identityHashCode(this))
-                + " " + info.name + "}";
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + " " + info.name + "}";
         }
 
         @Override
@@ -926,8 +1106,8 @@ public class PackageParser {
 
         public String toString() {
             return "PermissionGroup{"
-                + Integer.toHexString(System.identityHashCode(this))
-                + " " + info.name + "}";
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + " " + info.name + "}";
         }
 
         @Override
@@ -937,18 +1117,12 @@ public class PackageParser {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            super.writeToParcel(dest, flags);
-            dest.writeParcelable(info, flags);
-        }
-
-        private PermissionGroup(Parcel in) {
-            super(in);
-            info = in.readParcelable(Object.class.getClassLoader());
+            throw new UnsupportedOperationException("STUB");
         }
 
         public static final Parcelable.Creator CREATOR = new Parcelable.Creator<PermissionGroup>() {
             public PermissionGroup createFromParcel(Parcel in) {
-                return new PermissionGroup(in);
+                throw new UnsupportedOperationException("STUB");
             }
 
             public PermissionGroup[] newArray(int size) {
@@ -958,17 +1132,17 @@ public class PackageParser {
     }
 
     public static ApplicationInfo generateApplicationInfo(Package p, int flags,
-            PackageUserState state) {
-        return generateApplicationInfo(p, flags, state, UserHandle.getCallingUserId());
+                                                          PackageUserState state) {
+        throw new UnsupportedOperationException("STUB");
     }
 
     public static ApplicationInfo generateApplicationInfo(Package p, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         throw new UnsupportedOperationException("STUB");
     }
 
     public static ApplicationInfo generateApplicationInfo(ApplicationInfo ai, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         throw new UnsupportedOperationException("STUB");
     }
 
@@ -996,16 +1170,6 @@ public class PackageParser {
             info.packageName = packageName;
         }
 
-        public String toString() {
-            StringBuilder sb = new StringBuilder(128);
-            sb.append("Activity{");
-            sb.append(Integer.toHexString(System.identityHashCode(this)));
-            sb.append(' ');
-            appendComponentShortName(sb);
-            sb.append('}');
-            return sb.toString();
-        }
-
         @Override
         public int describeContents() {
             return 0;
@@ -1022,33 +1186,33 @@ public class PackageParser {
             }
 
             public Activity[] newArray(int size) {
-                throw new UnsupportedOperationException("STUB");
+                return new Activity[size];
             }
         };
     }
 
     public static final ActivityInfo generateActivityInfo(Activity a, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         throw new UnsupportedOperationException("STUB");
     }
 
     public static final ActivityInfo generateActivityInfo(ActivityInfo ai, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         throw new UnsupportedOperationException("STUB");
     }
 
     public final static class Service extends Component<ServiceIntentInfo> implements Parcelable {
+        public final ServiceInfo info;
+
         public Service(final ParseComponentArgs args, final ServiceInfo _info) {
             super(args, _info);
-            throw new UnsupportedOperationException("STUB");
+            info = _info;
+            info.applicationInfo = args.owner.applicationInfo;
         }
 
         public void setPackageName(String packageName) {
-            throw new UnsupportedOperationException("STUB");
-        }
-
-        public String toString() {
-            throw new UnsupportedOperationException("STUB");
+            super.setPackageName(packageName);
+            info.packageName = packageName;
         }
 
         @Override
@@ -1067,13 +1231,13 @@ public class PackageParser {
             }
 
             public Service[] newArray(int size) {
-                throw new UnsupportedOperationException("STUB");
+                return new Service[size];
             }
         };
     }
 
     public static final ServiceInfo generateServiceInfo(Service s, int flags,
-            PackageUserState state, int userId) {
+                                                        PackageUserState state, int userId) {
         throw new UnsupportedOperationException("STUB");
     }
 
@@ -1083,20 +1247,20 @@ public class PackageParser {
 
         public Provider(final ParseComponentArgs args, final ProviderInfo _info) {
             super(args, _info);
-            throw new UnsupportedOperationException("STUB");
+            info = _info;
+            info.applicationInfo = args.owner.applicationInfo;
+            syncable = false;
         }
 
         public Provider(Provider existingProvider) {
             super(existingProvider);
-            throw new UnsupportedOperationException("STUB");
+            this.info = existingProvider.info;
+            this.syncable = existingProvider.syncable;
         }
 
         public void setPackageName(String packageName) {
-            throw new UnsupportedOperationException("STUB");
-        }
-
-        public String toString() {
-            throw new UnsupportedOperationException("STUB");
+            super.setPackageName(packageName);
+            info.packageName = packageName;
         }
 
         @Override
@@ -1121,7 +1285,7 @@ public class PackageParser {
     }
 
     public static final ProviderInfo generateProviderInfo(Provider p, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         throw new UnsupportedOperationException("STUB");
     }
 
@@ -1131,25 +1295,23 @@ public class PackageParser {
 
         public Instrumentation(final ParsePackageItemArgs args, final InstrumentationInfo _info) {
             super(args, _info);
-            throw new UnsupportedOperationException("STUB");
+            info = _info;
         }
 
         public void setPackageName(String packageName) {
-            throw new UnsupportedOperationException("STUB");
-        }
-
-        public String toString() {
-            throw new UnsupportedOperationException("STUB");
+            super.setPackageName(packageName);
+            info.packageName = packageName;
         }
 
         @Override
         public int describeContents() {
-            throw new UnsupportedOperationException("STUB");
+            return 0;
         }
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            throw new UnsupportedOperationException("STUB");
+            super.writeToParcel(dest, flags);
+            dest.writeParcelable(info, flags);
         }
 
         public static final Parcelable.Creator CREATOR = new Parcelable.Creator<Instrumentation>() {
@@ -1158,7 +1320,7 @@ public class PackageParser {
             }
 
             public Instrumentation[] newArray(int size) {
-                throw new UnsupportedOperationException("STUB");
+                return new Instrumentation[size];
             }
         };
     }
@@ -1194,15 +1356,11 @@ public class PackageParser {
         public Activity activity;
 
         public ActivityIntentInfo(Activity _activity) {
-            throw new UnsupportedOperationException("STUB");
-        }
-
-        public String toString() {
-            throw new UnsupportedOperationException("STUB");
+            activity = _activity;
         }
 
         public ActivityIntentInfo(Parcel in) {
-            throw new UnsupportedOperationException("STUB");
+            super(in);
         }
     }
 
@@ -1210,15 +1368,11 @@ public class PackageParser {
         public Service service;
 
         public ServiceIntentInfo(Service _service) {
-            throw new UnsupportedOperationException("STUB");
-        }
-
-        public String toString() {
-            throw new UnsupportedOperationException("STUB");
+            service = _service;
         }
 
         public ServiceIntentInfo(Parcel in) {
-            throw new UnsupportedOperationException("STUB");
+            super(in);
         }
     }
 
@@ -1229,12 +1383,8 @@ public class PackageParser {
             this.provider = provider;
         }
 
-        public String toString() {
-            throw new UnsupportedOperationException("STUB");
-        }
-
         public ProviderIntentInfo(Parcel in) {
-            throw new UnsupportedOperationException("STUB");
+            super(in);
         }
     }
 
@@ -1244,8 +1394,6 @@ public class PackageParser {
     public static void setCompatibilityModeEnabled(boolean compatibilityModeEnabled) {
         throw new UnsupportedOperationException("STUB");
     }
-
-    private static AtomicReference<byte[]> sBuffer = new AtomicReference<byte[]>();
 
     public static long readFullyIgnoringContents(InputStream in) throws IOException {
         throw new UnsupportedOperationException("STUB");
@@ -1259,11 +1407,13 @@ public class PackageParser {
         public final int error;
 
         public PackageParserException(int error, String detailMessage) {
-            throw new UnsupportedOperationException("STUB");
+            super(detailMessage);
+            this.error = error;
         }
 
         public PackageParserException(int error, String detailMessage, Throwable throwable) {
-            throw new UnsupportedOperationException("STUB");
+            super(detailMessage, throwable);
+            this.error = error;
         }
     }
 }
