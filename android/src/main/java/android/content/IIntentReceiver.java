@@ -25,6 +25,11 @@ public interface IIntentReceiver extends android.os.IInterface {
             this.attachInterface(this, DESCRIPTOR);
         }
 
+        @Override
+        public android.os.IBinder asBinder() {
+            return this;
+        }
+
         /**
          * Cast an IBinder object into an android.content.IIntentReceiver interface,
          * generating a proxy if needed.
