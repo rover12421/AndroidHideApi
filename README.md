@@ -6,18 +6,54 @@
 使用:
 
 **Gradle**:
+
+- `Android` 原生系统相关：
 ``` groovy
 dependencies {
-        compile 'com.rover12421:AndroidHideApi:1.0'
-    }
+    compile 'com.rover12421.AndroidHideApi:android:1.13'
+}
+```
+
+- `HuaWei` 华为自定义相关(不一定所有huawei手机都有)：
+``` groovy
+dependencies {
+    compile 'com.rover12421.AndroidHideApi:huawei:1.4'
+}
+```
+
+- `MTK` MTK 手机自定义相关(不一定又有MTK的都有)：
+``` groovy
+dependencies {
+    compile 'com.rover12421.AndroidHideApi:mediatek:1.4'
+}
 ```
 
 
 **Maven**:
+
+- `Android` 原生系统相关：
 ``` xml
 <dependency>
-  <groupId>com.rover12421</groupId>
-  <artifactId>AndroidHideApi</artifactId>
-  <version>1.0</version>
+    <groupId>com.rover12421.AndroidHideApi</groupId>
+    <artifactId>android</artifactId>
+    <version>1.13</version>
+</dependency>
+```
+
+- `HuaWei` 华为自定义相关(不一定所有huawei手机都有)：
+``` xml
+<dependency>
+    <groupId>com.rover12421.AndroidHideApi</groupId>
+    <artifactId>huawei</artifactId>
+    <version>1.4</version>
+</dependency>
+```
+
+- `MTK` MTK 手机自定义相关(不一定又有MTK的都有)：
+``` xml
+<dependency>
+    <groupId>com.rover12421.AndroidHideApi</groupId>
+    <artifactId>mediatek</artifactId>
+    <version>1.4</version>
 </dependency>
 ```
