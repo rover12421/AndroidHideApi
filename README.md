@@ -57,3 +57,13 @@ dependencies {
     <version>1.4</version>
 </dependency>
 ```
+
+---
+
+如果没法下载最新版本，可以使用 `sonatype oss` 仓库
+
+``` groovy
+repositories {
+    maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
+}
+```
