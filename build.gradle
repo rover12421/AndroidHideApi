@@ -85,6 +85,9 @@ subprojects {
         from sourceSets.main.allSource
     }
 
+}
+
+configure(subprojects - project(':error') - project(':xposed')) {
     def ANDROID_HOME = System.getenv()['ANDROID_HOME']
 
     dependencies {
@@ -92,7 +95,7 @@ subprojects {
     }
 }
 
-configure(subprojects - project(':test')) {
+configure(subprojects - project(':test') - project(':error')) {
     artifacts {
         archives javadocJar
         archives sourcesJar

@@ -1,0 +1,11 @@
+version '1.0'
+
+/**
+ * 这是一个错误的定义包
+ * xposed的资源hook继承的TypedArray和源码不同
+ * 可能低版本相同吧，但是高版本不一样，资源Hook失效可能也和这个有一定关系吧
+ */
+
+dependencies {
+//    provided project(':android')
+}
