@@ -437,9 +437,23 @@ public class PackageParser {
      * and unique split names.
      *
      * @see PackageParser#parsePackage(File, int)
+     *
+     * Since SDK21
+     *
+     * API >= 21 才有的方法
      */
     public static PackageLite parsePackageLite(File packageFile, int flags)
             throws PackageParserException {
+        throw new UnsupportedOperationException("STUB");
+    }
+
+    /**
+     * Before SDK21
+     *
+     * API >= 21 不要使用，已经没有这个方法了
+     **/
+    @Deprecated()
+    public static PackageLite parsePackageLite(String packageFile, int flags) {
         throw new UnsupportedOperationException("STUB");
     }
 
