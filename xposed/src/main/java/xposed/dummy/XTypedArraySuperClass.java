@@ -18,7 +18,7 @@ public class XTypedArraySuperClass extends TypedArray {
 		 * TypedArray 来源错误lib
 		 * 源码 TypedArray 的构造方法是包级别的！！！
 		 */
-		super(null, null, null, 0);
+		super(null);
 		throw new UnsupportedOperationException();
 	}
 }

@@ -13,7 +13,7 @@ import android.content.res.Resources;
 public class XResourcesSuperClass extends Resources {
 	/** Dummy, will never be called (objects are transferred to this class only). */
 	protected XResourcesSuperClass() {
-		super(null, null, null);
+		super(null);
 		throw new UnsupportedOperationException();
 	}
 }

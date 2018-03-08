@@ -10,7 +10,7 @@
 - `Android` 原生系统相关：
 ``` groovy
 dependencies {
-    compile 'com.rover12421.AndroidHideApi:android:1.14'
+    compile 'com.rover12421.AndroidHideApi:android:1.15'
 }
 ```
 
@@ -36,7 +36,7 @@ dependencies {
 <dependency>
     <groupId>com.rover12421.AndroidHideApi</groupId>
     <artifactId>android</artifactId>
-    <version>1.14</version>
+    <version>1.15</version>
 </dependency>
 ```
 

@@ -475,7 +475,7 @@ public abstract class Context {
      */
     /*@ColorInt*/
     public final int getColor(/*@ColorRes*/ int id) {
-        return getResources().getColor(id, getTheme());
+        throw new UnsupportedOperationException("STUB");
     }
 
     /**
@@ -509,7 +509,7 @@ public abstract class Context {
      */
     @Nullable
     public final ColorStateList getColorStateList(/*@ColorRes*/ int id) {
-        return getResources().getColorStateList(id, getTheme());
+        throw new UnsupportedOperationException("STUB");
     }
 
      /**
@@ -542,7 +542,7 @@ public abstract class Context {
      * @see android.content.res.Resources.Theme#obtainStyledAttributes(int[])
      */
     public final TypedArray obtainStyledAttributes(/*@StyleableRes*/ int[] attrs) {
-        return getTheme().obtainStyledAttributes(attrs);
+        throw new UnsupportedOperationException("STUB");
     }
 
     /**
@@ -554,7 +554,7 @@ public abstract class Context {
      */
     public final TypedArray obtainStyledAttributes(
             /*@StyleRes*/ int resid, /*@StyleableRes*/ int[] attrs) throws Resources.NotFoundException {
-        return getTheme().obtainStyledAttributes(resid, attrs);
+        throw new UnsupportedOperationException("STUB");
     }
 
     /**
@@ -566,7 +566,7 @@ public abstract class Context {
      */
     public final TypedArray obtainStyledAttributes(
             AttributeSet set, /*@StyleableRes*/ int[] attrs) {
-        return getTheme().obtainStyledAttributes(set, attrs, 0, 0);
+        throw new UnsupportedOperationException("STUB");
     }
 
     /**
