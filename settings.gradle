@@ -5,5 +5,3 @@ include ':mediatek'
 include ':huawei'
 include ':test'
 include ':xposed'
-//include ':error'
-
