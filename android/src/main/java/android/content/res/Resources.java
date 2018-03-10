@@ -1543,4 +1543,20 @@ public class Resources {
             Resources res, Theme theme, AttributeSet set, int[] attrs) {
         throw new UnsupportedOperationException("STUB");
     }
+
+    /**
+     * 下面两个来源Xposed源码
+     * 没有去查看对应版本的源码了
+     * 最新的源码已经没有这两个方法了
+     * 使用需注意，仅仅是给xposed模块使用
+     */
+    /** Since SDK21, CM12 */
+    public Drawable getDrawable(int id, Theme theme, boolean supportComposedIcons) throws NotFoundException {
+        throw new UnsupportedOperationException("STUB");
+    }
+
+    /** Since SDK21, CM12 */
+    public Drawable getDrawableForDensity(int id, int density, Theme theme, boolean supportComposedIcons) {
+        throw new UnsupportedOperationException("STUB");
+    }
 }
