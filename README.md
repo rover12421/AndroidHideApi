@@ -10,7 +10,7 @@
 - `Android` 原生系统相关：
 ``` groovy
 dependencies {
-    compile 'com.rover12421.AndroidHideApi:android:1.16'
+    compile 'com.rover12421.AndroidHideApi:android:1.17'
 }
 ```
 
@@ -49,8 +49,8 @@ configurations {
 }
 
 dependencies {
-    androidHideApi 'com.rover12421.AndroidHideApi:android:1.16'
-    compileOnly 'com.rover12421.AndroidHideApi:android:1.16'
+    androidHideApi 'com.rover12421.AndroidHideApi:android:1.17'
+    compileOnly 'com.rover12421.AndroidHideApi:android:1.17'
 }
 
 ext {
