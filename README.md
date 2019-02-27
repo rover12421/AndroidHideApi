@@ -10,7 +10,7 @@
 - `Android` 原生系统相关：
 ``` groovy
 dependencies {
-    compile 'com.rover12421.AndroidHideApi:android:1.17'
+    compile 'com.rover12421.AndroidHideApi:android:1.18'
 }
 ```
 
@@ -25,6 +25,13 @@ dependencies {
 ``` groovy
 dependencies {
     compile 'com.rover12421.AndroidHideApi:mediatek:1.4'
+}
+```
+
+- `Xposed` XposedBridge的依赖：
+``` groovy
+dependencies {
+    compile 'com.rover12421.AndroidHideApi:xposed:1.1'
 }
 ```
 
