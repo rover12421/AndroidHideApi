@@ -63,6 +63,9 @@ tasks.withType(JavaCompile) {
 ```
 
 - 解决`IDEA`或`Android Studio`编译问题
+
+*注* 新版IDEA生成的`iml`文件没有`orderEntry`节点。如果不能生效请使用`Android Studio`
+
 ``` groovy
 task fixIml {
     ext.imlFile = projectDir.absolutePath + '/' + project.name + '.iml'
@@ -80,7 +83,7 @@ task fixIml {
         def orderEntries = moduleComponent.orderEntry
 
         def jdkOrderEntry = orderEntries.find { it.@type == 'jdk' }
-        def androidHideOrderEntry = orderEntries.find { it.@type == 'library' && it.@name.startsWith('Gradle: android-') }
+        def androidHideOrderEntry = orderEntries.find { it.@type == 'library' && it.@name.startsWith('Gradle: com.rover12421.AndroidHideApi:android') }
 
         if (androidHideOrderEntry != null) {
             moduleComponent.children().remove(androidHideOrderEntry)
