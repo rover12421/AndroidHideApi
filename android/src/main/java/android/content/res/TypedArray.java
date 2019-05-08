@@ -607,7 +607,7 @@ public class TypedArray {
         throw new UnsupportedOperationException("STUB");
     }
     /** @hide */
-    protected TypedArray(Resources resources) {
+    public TypedArray(Resources resources) {
         throw new UnsupportedOperationException("STUB");
     }
 
