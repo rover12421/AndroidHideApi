@@ -21,4 +21,9 @@ public class XTypedArraySuperClass extends TypedArray {
 		super(null);
 		throw new UnsupportedOperationException();
 	}
+
+	protected XTypedArraySuperClass(Resources resources) {
+		super(null);
+		throw new UnsupportedOperationException();
+	}
 }
