@@ -31,7 +31,7 @@ dependencies {
 - `Xposed` XposedBridge的依赖：
 ``` groovy
 dependencies {
-    compile 'com.rover12421.AndroidHideApi:xposed:1.2'
+    compile 'com.rover12421.AndroidHideApi:xposed:1.3'
 }
 ```
 
