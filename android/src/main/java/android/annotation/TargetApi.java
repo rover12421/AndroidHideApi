@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,22 @@
  */
 package android.annotation;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static java.lang.annotation.ElementType.TYPE;
 
-/**
- * Denotes that a parameter, field or method return value can never be null.
- * <p>
- * This is a marker annotation and it has no specific attributes.
- *
- * @paramDoc This value must never be {@code null}.
- * @returnDoc This value will never be {@code null}.
- * @hide
- */
-@Retention(SOURCE)
-@Target({METHOD, PARAMETER, FIELD})
-public @interface NonNull {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/** Indicates that Lint should treat this type as targeting a given API level, no matter what the
+    project target is. */
+@Target({TYPE, METHOD, CONSTRUCTOR, FIELD})
+@Retention(RetentionPolicy.CLASS)
+public @interface TargetApi {
+    /**
+     * This sets the target api level for the type..
+     */
+    int value();
 }

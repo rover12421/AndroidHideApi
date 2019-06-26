@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
-import sun.misc.CompoundEnumeration;
 
 /**
  * Base class for common functionality between various dex-based
@@ -223,24 +222,7 @@ public class BaseDexClassLoader extends ClassLoader {
 
     @Override
     protected Enumeration<URL> findResources(String name) {
-        Enumeration<URL> myResources = pathList.findResources(name);
-        if (sharedLibraryLoaders == null) {
-          return myResources;
-        }
-
-        Enumeration<URL>[] tmp =
-            (Enumeration<URL>[]) new Enumeration<?>[sharedLibraryLoaders.length + 1];
-        // This will add duplicate resources if a shared library is loaded twice, but that's ok
-        // as we don't guarantee uniqueness.
-        for (int i = 0; i < sharedLibraryLoaders.length; i++) {
-            try {
-                tmp[i] = sharedLibraryLoaders[i].getResources(name);
-            } catch (IOException e) {
-                // Ignore.
-            }
-        }
-        tmp[sharedLibraryLoaders.length] = myResources;
-        return new CompoundEnumeration<>(tmp);
+        throw new UnsupportedOperationException("STUB");
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,31 @@
  */
 package android.annotation;
 
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+import android.content.pm.PackageManager;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
 /**
- * Denotes that a parameter, field or method return value can never be null.
- * <p>
- * This is a marker annotation and it has no specific attributes.
+ * Denotes that the annotated element requires one or more device features. This
+ * is used to auto-generate documentation.
  *
- * @paramDoc This value must never be {@code null}.
- * @returnDoc This value will never be {@code null}.
+ * @see PackageManager#hasSystemFeature(String)
  * @hide
  */
 @Retention(SOURCE)
-@Target({METHOD, PARAMETER, FIELD})
-public @interface NonNull {
+@Target({TYPE,FIELD,METHOD,CONSTRUCTOR})
+public @interface RequiresFeature {
+    /**
+     * The name of the device feature that is required.
+     *
+     * @see PackageManager#hasSystemFeature(String)
+     */
+    String value();
 }

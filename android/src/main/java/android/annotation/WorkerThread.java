@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,31 @@ package android.annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
- * Denotes that a parameter, field or method return value can never be null.
+ * Denotes that the annotated method should only be called on a worker thread.
+ * If the annotated element is a class, then all methods in the class should be
+ * called on a worker thread.
  * <p>
- * This is a marker annotation and it has no specific attributes.
+ * Example:
  *
- * @paramDoc This value must never be {@code null}.
- * @returnDoc This value will never be {@code null}.
+ * <pre>
+ * <code>
+ *  &#64;WorkerThread
+ *  protected abstract FilterResults performFiltering(CharSequence constraint);
+ * </code>
+ * </pre>
+ *
+ * @memberDoc This method may take several seconds to complete, so it should
+ *            only be called from a worker thread.
  * @hide
  */
 @Retention(SOURCE)
-@Target({METHOD, PARAMETER, FIELD})
-public @interface NonNull {
+@Target({METHOD,CONSTRUCTOR,TYPE,PARAMETER})
+public @interface WorkerThread {
 }

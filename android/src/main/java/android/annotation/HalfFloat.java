@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2016 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,30 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
- * Denotes that a parameter, field or method return value can never be null.
- * <p>
- * This is a marker annotation and it has no specific attributes.
+ * <p>Denotes that the annotated element represents a half-precision floating point
+ * value. Such values are stored in short data types and can be manipulated with
+ * the {@link android.util.Half} class. If applied to an array of short, every
+ * element in the array represents a half-precision float.</p>
  *
- * @paramDoc This value must never be {@code null}.
- * @returnDoc This value will never be {@code null}.
+ * <p>Example:</p>
+ *
+ * <pre>{@code
+ * public abstract void setPosition(@HalfFloat short x, @HalfFloat short y, @HalfFloat short z);
+ * }</pre>
+ *
+ * @see android.util.Half
+ * @see android.util.Half#toHalf(float)
+ * @see android.util.Half#toFloat(short)
+ *
  * @hide
  */
 @Retention(SOURCE)
-@Target({METHOD, PARAMETER, FIELD})
-public @interface NonNull {
+@Target({PARAMETER, METHOD, LOCAL_VARIABLE, FIELD})
+public @interface HalfFloat {
 }

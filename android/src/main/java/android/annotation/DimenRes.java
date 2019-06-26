@@ -15,6 +15,7 @@
  */
 package android.annotation;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -24,15 +25,13 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
- * Denotes that a parameter, field or method return value can never be null.
- * <p>
- * This is a marker annotation and it has no specific attributes.
+ * Denotes that an integer parameter, field or method return value is expected
+ * to be a dimension resource reference (e.g. {@link android.R.dimen#app_icon_size}).
  *
- * @paramDoc This value must never be {@code null}.
- * @returnDoc This value will never be {@code null}.
- * @hide
+ * {@hide}
  */
+@Documented
 @Retention(SOURCE)
 @Target({METHOD, PARAMETER, FIELD})
-public @interface NonNull {
+public @interface DimenRes {
 }

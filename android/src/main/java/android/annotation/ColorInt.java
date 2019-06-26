@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2015 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
- * Denotes that a parameter, field or method return value can never be null.
+ * Denotes that the annotated element represents a packed color
+ * int, {@code AARRGGBB}. If applied to an int array, every element
+ * in the array represents a color integer.
  * <p>
- * This is a marker annotation and it has no specific attributes.
+ * Example:
+ * <pre>{@code
+ *  public abstract void setTextColor(@ColorInt int color);
+ * }</pre>
  *
- * @paramDoc This value must never be {@code null}.
- * @returnDoc This value will never be {@code null}.
  * @hide
  */
 @Retention(SOURCE)
-@Target({METHOD, PARAMETER, FIELD})
-public @interface NonNull {
+@Target({PARAMETER,METHOD,LOCAL_VARIABLE,FIELD})
+public @interface ColorInt {
 }

@@ -91,7 +91,7 @@ configure(subprojects - project(':xposed')) {
     def ANDROID_HOME = System.getenv()['ANDROID_HOME']
 
     dependencies {
-        provided files("$ANDROID_HOME/platforms/android-26/android.jar")
+        provided files("$ANDROID_HOME/platforms/android-28/android.jar")
     }
 }
 
