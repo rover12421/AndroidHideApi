@@ -1,5 +1,3 @@
-version '1.6'
-
 dependencies {
-    provided project(':android')
+    compileOnly project(':android')
 }
