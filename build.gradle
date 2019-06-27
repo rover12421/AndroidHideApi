@@ -65,7 +65,13 @@ subprojects {
     targetCompatibility = jdkVer
 
     sourceSets {
-        main { compileClasspath += configurations.provided }
+        main {
+            compileClasspath += configurations.provided
+            resources {
+                srcDirs = ["src/main/java"]
+                includes = ["**/*.aidl"]
+            }
+        }
     }
 
     tasks.withType(Javadoc) {
