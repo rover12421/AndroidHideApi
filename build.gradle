@@ -1,7 +1,20 @@
-apply plugin: 'idea'
+def loadProperties(String sourceFileName) {
+    def config = new Properties()
+    def propFile = new File(sourceFileName)
+    System.err.println("Loading property file: " + propFile.absolutePath)
+    if (propFile.canRead()) {
+        config.load(new FileInputStream(propFile))
+        for (Map.Entry property in config) {
+            System.out.println("setting " + property.key)
+            project.ext[property.key] = property.value
+        }
+    }
+}
+
+loadProperties("local.properties")
 
 buildscript {
-    ext.kotlin_version = '1.3.31'
+    ext.kotlin_version = '1.3.40'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
@@ -11,7 +24,7 @@ buildscript {
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.4.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -35,6 +48,7 @@ subprojects {
     apply plugin: 'com.android.library'
     android {
         compileSdkVersion 29
+        buildToolsVersion "29.0.0"
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
@@ -48,8 +62,6 @@ subprojects {
             versionCode 200
             versionName "${versionCode}"
 
-            consumerProguardFiles 'proguard-rules.pro'  // 自动加载依赖模块的混淆规则文件
-
             multiDexEnabled true
         }
 
@@ -57,6 +69,34 @@ subprojects {
             abortOnError false
             disable "ResourceType"
             warning 'NewApi', 'OnClick', 'EllipsizeMaxLines'
+        }
+
+        buildTypes {
+            release {
+                minifyEnabled false
+                shrinkResources false
+            }
+            debug {
+                minifyEnabled false
+                shrinkResources false
+            }
+        }
+    }
+
+}
+
+subprojects {
+    apply plugin: 'maven'
+
+    uploadArchives {
+        repositories.mavenDeployer {
+            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.artifactId = project.name
+            pom.version = '2.0.0'
+            pom.groupId = "com.rover12421.AndroidHideApi"
         }
     }
 
