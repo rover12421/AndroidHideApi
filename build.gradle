@@ -87,16 +87,52 @@ subprojects {
 
 subprojects {
     apply plugin: 'maven'
+    apply plugin: 'signing'
 
+    signing {
+        required { gradle.taskGraph.hasTask('uploadArchives') }
+        sign configurations.archives
+    }
+    
     uploadArchives {
         repositories.mavenDeployer {
             repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
                 authentication(userName: sonatypeUsername, password: sonatypePassword)
             }
 
+            configuration = configurations.archives
+
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
             pom.artifactId = project.name
             pom.version = '2.0.0'
             pom.groupId = "com.rover12421.AndroidHideApi"
+
+            pom.project {
+                name project.name
+                description "Android Hidden API / $project.name"
+                url 'http://www.rover12421.com'
+                packaging 'aar'
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'https://opensource.org/licenses/mit-license.php'
+                        distribution 'repo'
+                    }
+                }
+                scm {
+                    url 'https://github.com/rover12421/AndroidHideApi/tree/master'
+                    connection 'scm:git:git://github.com/rover12421/AndroidHideApi.git'
+                    developerConnection 'scm:git:git@github.com:rover12421/AndroidHideApi.git'
+                }
+                developers {
+                    developer {
+                        id 'rover12421'
+                        name 'Rover12421'
+                        email 'rover12421@163.com'
+                    }
+                }
+            }
         }
     }
 
