@@ -105,7 +105,7 @@ subprojects {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             pom.artifactId = project.name
-            pom.version = 'android-9.0.0_r41'
+            pom.version = 'android-8.1.0_r52'
             pom.groupId = "com.rover12421.AndroidHideApi"
 
             pom.project {

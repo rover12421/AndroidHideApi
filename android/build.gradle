@@ -8,7 +8,7 @@ dependencies {
 afterEvaluate {
     def task = project.tasks.create(name: "replace_aar") {
         doLast {
-            def from = "${project.projectDir}/android-9.0.0_r41.aar"
+            def from = "${project.projectDir}/android-8.1.0_r52.aar"
             def des = "${project.buildDir}/outputs/aar/android-release.aar"
             println "replace_aar : ${from}"
             Files.deleteIfExists(Paths.get(des))
