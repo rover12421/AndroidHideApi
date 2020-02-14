@@ -1,47 +1,50 @@
 # AndroidHideApi
 
-导出Android隐藏的API.
+本项目是用来发布 Android 完整版本的 SDK 的.
 
 ---
-使用:
+
+> 发布版本和AOSP分支对应表:
+
+版本号               | AOSP 分支
+--------------------|------------------
+Lollipop_5.0_21     | android-5.0.0_r7
+Lollipop_5.1_22     | android-5.1.0_r3
+Marshmallow_6.0_23  | android-6.0.0_r41
+Nougat_7.0_24       | android-7.0.0_r17
+Nougat_7.1.1_25     | android-7.1.1_r31
+Oreo_8.0_26         | android-8.0.0_r17
+Oreo_8.1_27         | android-8.1.0_r52
+Pie_9.0_28          | android-9.0.0_r41
+Q_10.0_29           | android-10.0.0_r2
+
+> 子项目(artifactId)在 AOSP 的对应关系
+
+artifactId          | AOSP 位置
+--------------------|------------------
+framework           | out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/classes.jar
+core-libart         | out/target/common/obj/JAVA_LIBRARIES/core-libart_intermediates/classes.jar
+
+---
+
+> 使用:
 
 **Gradle**:
 
-- `Android` 原生系统相关：
+- 引用 android Q 的  `framework`,可以替换 `Android SDK` 中的 `android.jar`
 ``` groovy
 dependencies {
-    compile 'com.rover12421.AndroidHideApi:android:android-9.0.0_r41'
+    compile 'com.rover12421.android.hide:framework:Q_10.0_29'
 }
 ```
-
-- `HuaWei` 华为自定义相关(不一定所有huawei手机都有)：
-``` groovy
-dependencies {
-    compile 'com.rover12421.AndroidHideApi:huawei:1.4'
-}
-```
-
-- `MTK` MTK 手机自定义相关(不一定又有MTK的都有)：
-``` groovy
-dependencies {
-    compile 'com.rover12421.AndroidHideApi:mediatek:1.4'
-}
-```
-
-- `Xposed` XposedBridge的依赖：
-``` groovy
-dependencies {
-    compile 'com.rover12421.AndroidHideApi:xposed:1.3'
-}
-```
-
----
 
 如果没法下载最新版本，可以使用 `sonatype oss` 仓库
 
 ``` groovy
 repositories {
-    maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
+    maven { 
+        url 'https://oss.sonatype.org/service/local/repositories/releases/content/' 
+    }
 }
 ```
 
@@ -69,9 +72,11 @@ tasks.withType(JavaCompile) {
 }
 ```
 
-- 解决`IDEA`或`Android Studio`编译问题
+> 解决`IDEA`或`Android Studio`编译问题
 
-*注* 新版IDEA生成的`iml`文件没有`orderEntry`节点。如果不能生效请使用`Android Studio`
+- **注1** | 新版IDEA生成的`iml`文件没有`orderEntry`节点。如果不能生效请使用`Android Studio`
+- **注2** | 最新的 `Android Studio` 虽然可以修改 `orderEntry`, 但是IDE中顺序还是以原生 SDK 优先. `Gradle` 编译没有问题
+
 
 ``` groovy
 task fixIml {
