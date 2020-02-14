@@ -6,7 +6,7 @@ def loadProperties(String sourceFileName) {
         config.load(new FileInputStream(propFile))
         for (Map.Entry property in config) {
             System.out.println("setting " + property.key)
-            project.ext[property.key] = property.value
+            rootProject.ext[property.key] = property.value
         }
     }
 }
@@ -14,7 +14,7 @@ def loadProperties(String sourceFileName) {
 loadProperties("local.properties")
 
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.3.61'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
@@ -24,7 +24,6 @@ buildscript {
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -45,95 +44,26 @@ task clean(type: Delete) {
 }
 
 subprojects {
-    apply plugin: 'com.android.library'
-    android {
-        compileSdkVersion 29
-        buildToolsVersion "29.0.2"
+    apply plugin: 'java-library'
 
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
-
-        defaultConfig {
-            minSdkVersion 21
-            targetSdkVersion 29
-
-            versionCode 200
-            versionName "${versionCode}"
-
-            multiDexEnabled true
-        }
-
-        lintOptions {
-            abortOnError false
-            disable "ResourceType"
-            warning 'NewApi', 'OnClick', 'EllipsizeMaxLines'
-        }
-
-        buildTypes {
-            release {
-                minifyEnabled false
-                shrinkResources false
-            }
-            debug {
-                minifyEnabled false
-                shrinkResources false
-            }
-        }
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+        options.addStringOption('charSet', 'UTF-8')
     }
 
-}
-
-subprojects {
-    apply plugin: 'maven'
-    apply plugin: 'signing'
-
-    signing {
-        required { gradle.taskGraph.hasTask('uploadArchives') }
-        sign configurations.archives
-    }
-    
-    uploadArchives {
-        repositories.mavenDeployer {
-            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-
-            configuration = configurations.archives
-
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            pom.artifactId = project.name
-            pom.version = 'android-10.0.0_r2.fixer01'
-            pom.groupId = "com.rover12421.AndroidHideApi"
-
-            pom.project {
-                name project.name
-                description "Android Hidden API / $project.name"
-                url 'http://www.rover12421.com'
-                packaging 'aar'
-                licenses {
-                    license {
-                        name 'MIT License'
-                        url 'https://opensource.org/licenses/mit-license.php'
-                        distribution 'repo'
-                    }
-                }
-                scm {
-                    url 'https://github.com/rover12421/AndroidHideApi/tree/master'
-                    connection 'scm:git:git://github.com/rover12421/AndroidHideApi.git'
-                    developerConnection 'scm:git:git@github.com:rover12421/AndroidHideApi.git'
-                }
-                developers {
-                    developer {
-                        id 'rover12421'
-                        name 'Rover12421'
-                        email 'rover12421@163.com'
-                    }
-                }
-            }
-        }
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        archiveClassifier = 'javadoc'
+        from javadoc.destinationDir
     }
 
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
+    }
 }
