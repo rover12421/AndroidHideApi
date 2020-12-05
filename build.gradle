@@ -4,17 +4,20 @@ def loadProperties(String sourceFileName) {
     System.err.println("Loading property file: " + propFile.absolutePath)
     if (propFile.canRead()) {
         config.load(new FileInputStream(propFile))
+        println "load config size : ${config.size()}"
         for (Map.Entry property in config) {
             System.out.println("setting " + property.key)
             rootProject.ext[property.key] = property.value
         }
+    } else {
+        println "propFile don't read"
     }
+
 }
 
 loadProperties("local.properties")
 
 buildscript {
-    ext.kotlin_version = '1.3.61'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
@@ -22,9 +25,6 @@ buildscript {
         mavenCentral()
         jcenter()
         maven { url "https://jitpack.io" }
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
