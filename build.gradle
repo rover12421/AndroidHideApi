@@ -14,7 +14,7 @@ def loadProperties(String sourceFileName) {
 loadProperties("local.properties")
 
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.4.20'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
@@ -24,7 +24,7 @@ buildscript {
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -47,8 +47,7 @@ task clean(type: Delete) {
 subprojects {
     apply plugin: 'com.android.library'
     android {
-        compileSdkVersion 29
-        buildToolsVersion "29.0.2"
+        compileSdkVersion 30
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
@@ -57,7 +56,7 @@ subprojects {
 
         defaultConfig {
             minSdkVersion 21
-            targetSdkVersion 29
+            targetSdkVersion 30
 
             versionCode 200
             versionName "${versionCode}"
@@ -105,13 +104,13 @@ subprojects {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             pom.artifactId = project.name
-            pom.version = 'android-10.0.0_r2.fixer01'
-            pom.groupId = "com.rover12421.AndroidHideApi"
+            pom.version = project.version
+            pom.groupId = "com.rover12421.android.hide"
 
             pom.project {
                 name project.name
                 description "Android Hidden API / $project.name"
-                url 'http://www.rover12421.com'
+                url 'https://shaka.rover.plus'
                 packaging 'aar'
                 licenses {
                     license {
