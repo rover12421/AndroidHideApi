@@ -1,0 +1,9 @@
+import java.nio.file.*
+
+version 'android-11.0.0_r17'
+
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.version = version
+    }
+}

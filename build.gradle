@@ -1,3 +1,7 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+
 def loadProperties(String sourceFileName) {
     def config = new Properties()
     def propFile = new File(sourceFileName)
@@ -11,20 +15,19 @@ def loadProperties(String sourceFileName) {
     }
 }
 
-loadProperties("local.properties")
+loadProperties("$rootDir/local.properties")
 
 buildscript {
-    ext.kotlin_version = '1.4.20'
+    ext.kotlin_version = '1.5.20'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
         google()
         mavenCentral()
-        jcenter()
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.4'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -35,7 +38,6 @@ allprojects {
         maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
         google()
         mavenCentral()
-        jcenter()
         maven { url "https://jitpack.io" }
     }
 }
@@ -44,7 +46,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-subprojects {
+project(':android') {
     apply plugin: 'com.android.library'
     android {
         compileSdkVersion 30
@@ -92,7 +94,7 @@ subprojects {
         required { gradle.taskGraph.hasTask('uploadArchives') }
         sign configurations.archives
     }
-    
+
     uploadArchives {
         repositories.mavenDeployer {
             repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
@@ -135,4 +137,40 @@ subprojects {
         }
     }
 
+}
+
+configure(subprojects - project(':android')) {
+    apply plugin: 'java-library'
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+        options.addStringOption('charSet', 'UTF-8')
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        archiveClassifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
+    }
+
+    task replace_jar {
+        doLast {
+            def from = "${project.projectDir}/libs/classes.jar"
+            def des = "${project.buildDir}/libs/${project.name}-${project.version}.jar"
+            println "replace_jar : ${from}"
+            Files.copy(Paths.get(from), Paths.get(des), StandardCopyOption.REPLACE_EXISTING)
+        }
+    }
+
+    uploadArchives.dependsOn replace_jar
 }

@@ -1,6 +1,9 @@
 rootProject.name = 'AndroidHideApi'
 
 include ':android'
-include ':mediatek'
-include ':huawei'
-include ':xposed'
+//include ':mediatek'
+//include ':huawei'
+//include ':xposed'
+include ':framework'
+include ':libart'
+include ':libcore'

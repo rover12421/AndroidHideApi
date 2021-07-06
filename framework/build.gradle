@@ -1,0 +1,10 @@
+import java.nio.file.*
+
+group 'com.rover12421.android.hide'
+version 'android-11.0.0_r17'
+
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.version = version
+    }
+}
