@@ -3,27 +3,18 @@
 本项目是用来发布 Android 完整版本的 SDK 的.
 
 ---
-
-> 发布版本和AOSP分支对应表:
-
-版本号               | AOSP 分支
---------------------|------------------
-Lollipop_5.0_21     | android-5.0.0_r7
-Lollipop_5.1_22     | android-5.1.0_r3
-Marshmallow_6.0_23  | android-6.0.0_r41
-Nougat_7.0_24       | android-7.0.0_r17
-Nougat_7.1.1_25     | android-7.1.1_r31
-Oreo_8.0_26         | android-8.0.0_r17
-Oreo_8.1_27         | android-8.1.0_r52
-Pie_9.0_28          | android-9.0.0_r41
-Q_10.0_29           | android-10.0.0_r2
-
 > 子项目(artifactId)在 AOSP 的对应关系
 
 artifactId          | AOSP 位置
 --------------------|------------------
-framework           | out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/classes.jar
-core-libart         | out/target/common/obj/JAVA_LIBRARIES/core-libart_intermediates/classes.jar
+framework           | out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/classes-header.jar
+libart              | out/target/common/obj/JAVA_LIBRARIES/core-libart.com.android.art.release_intermediates/classes.jar
+libcore             | out/soong/.intermediates/libcore/core-all-system-modules/android_common/modules/module.jar
+
+---
+
+`android` 项目是aar模式,包含aidl文件,如需要aild请使用这个版本.不需要aidl,建议使用 `framework` 项目.
+`libcore` 包含`sun`包的部分类.比如`Unsafe`
 
 ---
 
@@ -34,7 +25,7 @@ core-libart         | out/target/common/obj/JAVA_LIBRARIES/core-libart_intermedi
 - 引用 android Q 的  `framework`,可以替换 `Android SDK` 中的 `android.jar`
 ``` groovy
 dependencies {
-    compile 'com.rover12421.android.hide:framework:Q_10.0_29'
+    compile 'com.rover12421.android.hide:framework:11.0.0_r17'
 }
 ```
 
@@ -59,8 +50,8 @@ configurations {
 }
 
 dependencies {
-    androidHideApi 'com.rover12421.AndroidHideApi:android:android-9.0.0_r41'
-    compileOnly 'com.rover12421.AndroidHideApi:android:android-9.0.0_r41'
+    androidHideApi 'com.rover12421.AndroidHideApi:framework:11.0.0_r17'
+    compileOnly 'com.rover12421.AndroidHideApi:framework:11.0.0_r17'
 }
 
 ext {
@@ -95,7 +86,7 @@ task fixIml {
         def orderEntries = moduleComponent.orderEntry
 
         def jdkOrderEntry = orderEntries.find { it.@type == 'jdk' }
-        def androidHideOrderEntry = orderEntries.find { it.@type == 'library' && it.@name.startsWith('Gradle: com.rover12421.AndroidHideApi:android') }
+        def androidHideOrderEntry = orderEntries.find { it.@type == 'library' && it.@name.startsWith('Gradle: com.rover12421.AndroidHideApi:framework') }
 
         if (androidHideOrderEntry != null) {
             moduleComponent.children().remove(androidHideOrderEntry)
