@@ -1,7 +1,6 @@
 import java.nio.file.*
 
-group 'com.rover12421.android.hide'
-version '11.0.0_r17'
+version '12.0.0_r16'
 
 uploadArchives {
     repositories.mavenDeployer {
