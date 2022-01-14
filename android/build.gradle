@@ -1,25 +1,24 @@
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 
-version = "12.0.0_r16"
+version = "12.0.0_r16.1"
 
 dependencies {
     api fileTree(dir: "libs", include: ['*.jar'])
 }
 
-afterEvaluate {
-    def task = project.tasks.create(name: "replace_aar") {
-        doLast {
-            def from = "${project.projectDir}/android-${version}.aar"
-            def des = "${project.buildDir}/outputs/aar/android-release.aar"
-            println "replace_aar : ${from} to ${des}"
-            Files.deleteIfExists(Paths.get(des))
-            Files.copy(Paths.get(from), Paths.get(des))
-        }
+task replace_aar {
+    doLast {
+        def from = "${project.projectDir}/android-${version}.aar"
+        def des = "${project.buildDir}/outputs/aar/android-release.aar"
+        println "replace_aar : ${from} to ${des}"
+        Files.deleteIfExists(Paths.get(des))
+        Files.copy(Paths.get(from), Paths.get(des), StandardCopyOption.REPLACE_EXISTING)
     }
-
-    project.tasks.findByPath("uploadArchives").dependsOn task
 }
+
+uploadArchives.dependsOn replace_aar
 
 uploadArchives {
     repositories.mavenDeployer {
