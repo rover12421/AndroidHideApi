@@ -18,10 +18,4 @@ task replace_aar {
     }
 }
 
-uploadArchives.dependsOn replace_aar
-
-uploadArchives {
-    repositories.mavenDeployer {
-        pom.version = version
-    }
-}
+generatePomFileForSonatypePublication.dependsOn replace_aar

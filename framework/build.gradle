@@ -1,9 +1,0 @@
-import java.nio.file.*
-
-version '12.1.0_r5'
-
-uploadArchives {
-    repositories.mavenDeployer {
-        pom.version = version
-    }
-}
