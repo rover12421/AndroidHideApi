@@ -1,5 +1,5 @@
 public class Version {
     public static String getVersion() {
-        return "libcore:12.1.0_r5";
+        return "libcore:13.0.0_r2";
     }
 }
