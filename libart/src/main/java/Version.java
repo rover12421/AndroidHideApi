@@ -1,5 +1,5 @@
 public class Version {
     public static String getVersion() {
-        return "libart:12.0.0_r34";
+        return "libart:11.0.0_r48";
     }
 }

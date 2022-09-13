@@ -49,7 +49,7 @@ task clean(type: Delete) {
 project(':android') {
     apply plugin: 'com.android.library'
     android {
-        compileSdkVersion 31
+        compileSdkVersion 30
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
@@ -59,7 +59,7 @@ project(':android') {
         defaultConfig {
             minSdkVersion 21
             //noinspection OldTargetApi
-            targetSdkVersion 31
+            targetSdkVersion 30
 
             versionCode 200
             versionName "${versionCode}"
@@ -113,7 +113,7 @@ configure(subprojects - project(':android')) {
 }
 
 subprojects {
-    version = "12.0.0_r34"
+    version = "11.0.0_r48"
     apply plugin: 'maven-publish'
     publishing {
         publications {
