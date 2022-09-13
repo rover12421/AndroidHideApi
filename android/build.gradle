@@ -2,7 +2,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
-version = "10.0.0_r2"
+version = "9.0.0_r41"
 
 dependencies {
     api fileTree(dir: "libs", include: ['*.jar'])
