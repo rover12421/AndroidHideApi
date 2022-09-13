@@ -1,5 +1,5 @@
 public class Version {
     public static String getVersion() {
-        return "android:android-6.0.0_r41";
+        return "android:android-5.1.1_r14";
     }
 }
