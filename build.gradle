@@ -113,7 +113,7 @@ configure(subprojects - project(':android')) {
 }
 
 subprojects {
-    version = "7.1.2_r28"
+    version = "7.1.1_r31"
     apply plugin: 'maven-publish'
     publishing {
         publications {

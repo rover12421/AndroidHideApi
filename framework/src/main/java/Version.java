@@ -1,5 +1,5 @@
 public class Version {
     public static String getVersion() {
-        return "framework:7.1.2_r28";
+        return "framework:7.1.1_r31";
     }
 }
