@@ -18,7 +18,7 @@ def loadProperties(String sourceFileName) {
 loadProperties("$rootDir/local.properties")
 
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.7.10'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
