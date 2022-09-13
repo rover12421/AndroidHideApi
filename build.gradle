@@ -49,7 +49,7 @@ task clean(type: Delete) {
 project(':android') {
     apply plugin: 'com.android.library'
     android {
-        compileSdkVersion 31
+        compileSdkVersion 32
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
@@ -58,7 +58,8 @@ project(':android') {
 
         defaultConfig {
             minSdkVersion 21
-            targetSdkVersion 31
+            //noinspection OldTargetApi
+            targetSdkVersion 32
 
             versionCode 200
             versionName "${versionCode}"
