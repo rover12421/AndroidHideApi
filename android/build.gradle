@@ -2,13 +2,13 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
-version = "11.0.0_r48"
+version = "14.0.0_r2"
 
 dependencies {
     api fileTree(dir: "libs", include: ['*.jar'])
 }
 
-task replace_aar {
+tasks.register('replace_aar') {
     doLast {
         def from = "${project.projectDir}/android-${version}.aar"
         def des = "${project.buildDir}/outputs/aar/android-release.aar"

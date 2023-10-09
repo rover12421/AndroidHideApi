@@ -42,14 +42,14 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
 
 project(':android') {
     apply plugin: 'com.android.library'
     android {
-        compileSdkVersion 30
+        compileSdkVersion 34
 
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
@@ -59,7 +59,7 @@ project(':android') {
         defaultConfig {
             minSdkVersion 21
             //noinspection OldTargetApi
-            targetSdkVersion 30
+            targetSdkVersion 34
 
             versionCode 200
             versionName "${versionCode}"
@@ -90,18 +90,20 @@ project(':android') {
 configure(subprojects - project(':android')) {
     apply plugin: 'java-library'
 
-    tasks.withType(Javadoc) {
+    tasks.withType(Javadoc).configureEach {
         options.addStringOption('Xdoclint:none', '-quiet')
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charSet', 'UTF-8')
     }
 
-    task javadocJar(type: Jar, dependsOn: javadoc) {
+    tasks.register('javadocJar', Jar) {
+        dependsOn javadoc
         archiveClassifier = 'javadoc'
         from javadoc.destinationDir
     }
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
+    tasks.register('sourcesJar', Jar) {
+        dependsOn classes
         archiveClassifier = 'sources'
         from sourceSets.main.allSource
     }
@@ -113,7 +115,7 @@ configure(subprojects - project(':android')) {
 }
 
 subprojects {
-    version = "11.0.0_r48"
+    version = "14.0.0_r2"
     apply plugin: 'maven-publish'
     publishing {
         publications {
@@ -188,7 +190,7 @@ subprojects {
 }
 
 configure(subprojects - project(':android')) {
-    task replace_jar {
+    tasks.register('replace_jar') {
         doLast {
             def from = "${project.projectDir}/libs/classes.jar"
             def des = "${project.buildDir}/libs/${project.name}-${project.version}.jar"
